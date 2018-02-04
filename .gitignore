@@ -1,0 +1,5 @@
+.idea
+generated
+*.pyc
+*/*.pyc
+ToDo.md
