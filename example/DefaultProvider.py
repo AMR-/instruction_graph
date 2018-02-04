@@ -1,6 +1,13 @@
-class DefaultProvier(object):
+from components.Provider import BaseProvider
+
+
+class DefaultProvider(BaseProvider):
     def __init__(self):
+        super(DefaultProvider, self).__init__()
         self.vars = {}
+
+    def provider_name(self):
+        return "Default_Provider"
 
     def set(self, key, value):
         if not isinstance(key, str):
