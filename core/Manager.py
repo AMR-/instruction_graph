@@ -3,7 +3,7 @@ import time
 
 import IG
 from IG import InstructionNode
-from imp_store.ImplementationStore import ImplementationStore as IStore
+from imp_store.PrimitiveLibrary import PrimitiveLibrary as IStore
 
 
 class Manager:

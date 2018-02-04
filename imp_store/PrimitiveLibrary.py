@@ -1,13 +1,13 @@
 import uuid
 
 
-class ImplementationStore(object):
+class PrimitiveLibrary(object):
     # A class to hold implementation-specific information (such as possible actions
     # and condition) to use in the instruction graph
 
     def __init__(self, name=None):
-        self.name = name if name is not None else "Imp_" + uuid.uuid4().hex
-        print("Implementation Store initialized with name %s" % self.name)
+        self.name = name if name is not None else "Library_" + uuid.uuid4().hex
+        print("Primitive Library initialized with name %s" % self.name)
         self.functionStore = []
         self.true_lam_name = "true_lam"
         self.set_fn_store(self.functionStore)
