@@ -1,8 +1,6 @@
 class ActionPrimitive(tuple):
     def __new__(cls, fn_name, fn, human_name=None, human_description=None):
-        # TODO investigate why this warning arises
-        # noinspection PyArgumentList
-        return super(ActionPrimitive, cls).__new__(cls, (fn_name, fn, human_name, human_description))
+        return super(ActionPrimitive, cls).__new__(cls)
 
     def __init__(self, fn_name, fn, human_name=None, human_description=None):
         super(ActionPrimitive, self).__init__((fn_name, fn, human_name, human_description))
@@ -17,9 +15,7 @@ class ActionPrimitive(tuple):
 
 class ConditionalPrimitive(tuple):
     def __new__(cls, fn_name, fn, human_name=None, human_description=None):
-        # TODO investigate why this warning arises
-        # noinspection PyArgumentList
-        return super(ConditionalPrimitive, cls).__new__(cls, (fn_name, fn, human_name, human_description))
+        return super(ConditionalPrimitive, cls).__new__(cls)
 
     def __init__(self, fn_name, fn, human_name=None, human_description=None):
         super(ConditionalPrimitive, self).__init__((fn_name, fn, human_name, human_description))
@@ -36,9 +32,7 @@ class ConditionalPrimitive(tuple):
 # ActionPrimitiveMapper
 class ActionTuple(tuple):
     def __new__(cls, fn_name_regex, fn_name, fn_args_reparse, human_name):
-        # TODO investigate why this warning arises
-        # noinspection PyArgumentList
-        return super(ActionTuple, cls).__new__(cls, (fn_name_regex, fn_name, fn_args_reparse, human_name))
+        return super(ActionTuple, cls).__new__(cls)
         # return tuple.__new__(ActionTuple, (regex, fn, fn_args, human_name))
 
     def __init__(self, fn_name_regex, fn_name, fn_args_reparse, human_name):
@@ -51,8 +45,7 @@ class ActionTuple(tuple):
 
 class CondTuple(tuple):
     def __new__(cls, fn_name_regex, fn_name, fn_arg_reparse, human_name):
-        # noinspection PyArgumentList
-        return super(CondTuple, cls).__new__(cls, (fn_name_regex, fn_name, fn_arg_reparse, human_name))
+        return super(CondTuple, cls).__new__(cls)
 
     def __init__(self, fn_name_regex, fn, fn_arg_reparse, human_name):
         super(CondTuple, self).__init__((fn_name_regex, fn, fn_arg_reparse, human_name))
