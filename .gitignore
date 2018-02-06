@@ -1,5 +1,9 @@
 .idea
 generated
+dist
 *.pyc
 */*.pyc
 ToDo.md
+notes.txt
+instruction_graph*.tar.gz
+MANIFEST

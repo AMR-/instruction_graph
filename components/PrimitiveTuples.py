@@ -29,7 +29,22 @@ class ConditionalPrimitive(tuple):
 
 #  ignore below this line...
 
+
+# text_to_name - Function or regex string that returns true or matches input command
+#   when it matches the Primitive
+# text_to_args - Function, regex, or list.  If function, returns list of args from text.  If regex,
+#   then the matching groups (in order, or by named number) denote list of args. If literal list, the
+#   literal list are the args.
+class MappingMixIn(object):
+    def __init__(self, text_to_name, text_to_args):
+        super(MappingMixIn, self).__init__()
+        self.text_to_name = text_to_name
+        self.text_to_args = text_to_args
+
+
 # ActionPrimitiveMapper
+# MappableActionPrimitive
+# TODO mixes ActionPrimitive and MappingMixIn
 class ActionTuple(tuple):
     def __new__(cls, fn_name_regex, fn_name, fn_args_reparse, human_name):
         return super(ActionTuple, cls).__new__(cls)
@@ -58,3 +73,7 @@ class CondTuple(tuple):
 def make_fn(fn_or_list):
     fn = lambda: None
     return fn_or_list if isinstance(fn_or_list, type(fn)) else lambda cmd: fn_or_list
+
+# TODO -- create the make_fn(fn_or_regex_or_list)
+
+
