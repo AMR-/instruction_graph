@@ -36,7 +36,7 @@ class IG:
         # During IG creation, instructionStack holds the
         #   stack of unclosed conditional-type nodes
         self.instructionStack = []
-        print "IG initialized"
+        print("IG initialized")
 
     def reset(self):
         self.currentNode = self.start
@@ -46,11 +46,12 @@ class IG:
         if (parentNode is None):
             parentNode = self.currentNode
         #print "adding action ", code
-        print "adding action %s with %d arguments and %s provider." % (fn_name,
+        print("adding action %s with %d arguments and %s provider." % (fn_name,
             len(args) if args is not None else 0,
-            'WITH passing a' if pass_provider else 'not passing a')
+            'WITH passing a' if pass_provider else 'not passing a'))
         #print "parent; ", parentNode.codeStr
-        print "parent; ", parentNode.Fn, ' ', parentNode.FnArgs
+        # print "parent; ", parentNode.Fn, ' ', parentNode.FnArgs
+        print("parent; %s %s" % (parentNode.Fn, parentNode.FnArgs))
         n = InstructionNode()
         n.type = InstructionNode.ACTION
         #n.codeStr = code

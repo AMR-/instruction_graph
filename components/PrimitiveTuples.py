@@ -3,7 +3,8 @@ class ActionPrimitive(tuple):
         return super(ActionPrimitive, cls).__new__(cls)
 
     def __init__(self, fn_name, fn, human_name=None, human_description=None):
-        super(ActionPrimitive, self).__init__((fn_name, fn, human_name, human_description))
+        # super(ActionPrimitive, self).__init__((fn_name, fn, human_name, human_description))
+        super(ActionPrimitive, self).__init__()
         self.fn_name = fn_name                  # internal identifier for function
         self.function = fn                      # the action function itself (returns nothing)
         self.human_name = human_name            # (optional) human name, for use in interactives
@@ -18,7 +19,8 @@ class ConditionalPrimitive(tuple):
         return super(ConditionalPrimitive, cls).__new__(cls)
 
     def __init__(self, fn_name, fn, human_name=None, human_description=None):
-        super(ConditionalPrimitive, self).__init__((fn_name, fn, human_name, human_description))
+        # super(ConditionalPrimitive, self).__init__((fn_name, fn, human_name, human_description))
+        super(ConditionalPrimitive, self).__init__()
         self.fn_name = fn_name                  # internal identifier for function
         self.function = fn                      # the condition function itself (returns T/F)
         self.human_name = human_name            # (optional) human name, for use in interactives
