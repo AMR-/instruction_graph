@@ -1,9 +1,11 @@
 .idea
 generated
 dist
+build
 *.pyc
 */*.pyc
 ToDo.md
 notes.txt
 instruction_graph*.tar.gz
+instruction_graph.egg_info
 MANIFEST
