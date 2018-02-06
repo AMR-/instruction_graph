@@ -3,6 +3,7 @@ from distutils.core import setup
 setup(name='instruction_graph',
       version='0.1.1',
       author='Aaron Roth and others',
+      author_email='coralpeppercmu@gmail.com',
       # TODO update these
       url='about:blank',
       description="An implementation of instruction graph.",
@@ -13,6 +14,7 @@ setup(name='instruction_graph',
       #            'instruction_graph.example'],
       provides='instruction_graph',
       # scripts=['TextCommunicator.py'],
+      scripts=['run_tests.py'],
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Environment :: Other Environment',

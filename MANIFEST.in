@@ -1,0 +1,5 @@
+include Readme.md
+prune dist
+prune .git
+prune .gitignore
+prune notes.txt
