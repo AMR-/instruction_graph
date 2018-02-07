@@ -1,9 +1,12 @@
+
+
 class ActionPrimitive(tuple):
     def __new__(cls, fn_name, fn, human_name=None, human_description=None):
-        return super(ActionPrimitive, cls).__new__(cls)
+        arg_list = [fn_name, fn, human_name, human_description]
+        # noinspection PyArgumentList
+        return super(ActionPrimitive, cls).__new__(cls, arg_list)
 
     def __init__(self, fn_name, fn, human_name=None, human_description=None):
-        # super(ActionPrimitive, self).__init__((fn_name, fn, human_name, human_description))
         super(ActionPrimitive, self).__init__()
         self.fn_name = fn_name                  # internal identifier for function
         self.function = fn                      # the action function itself (returns nothing)
@@ -16,7 +19,9 @@ class ActionPrimitive(tuple):
 
 class ConditionalPrimitive(tuple):
     def __new__(cls, fn_name, fn, human_name=None, human_description=None):
-        return super(ConditionalPrimitive, cls).__new__(cls)
+        arg_list = [fn_name, fn, human_name, human_description]
+        # noinspection PyArgumentList
+        return super(ConditionalPrimitive, cls).__new__(cls, arg_list)
 
     def __init__(self, fn_name, fn, human_name=None, human_description=None):
         # super(ConditionalPrimitive, self).__init__((fn_name, fn, human_name, human_description))
