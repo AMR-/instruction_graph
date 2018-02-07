@@ -1,15 +1,14 @@
 
-
-class ActionPrimitive(tuple):
+class Primitive(tuple):
     def __new__(cls, fn_name, fn, human_name=None, human_description=None):
         arg_list = [fn_name, fn, human_name, human_description]
         # noinspection PyArgumentList
-        return super(ActionPrimitive, cls).__new__(cls, arg_list)
+        return super(Primitive, cls).__new__(cls, arg_list)
 
     def __init__(self, fn_name, fn, human_name=None, human_description=None):
-        super(ActionPrimitive, self).__init__()
+        super(Primitive, self).__init__()
         self.fn_name = fn_name                  # internal identifier for function
-        self.function = fn                      # the action function itself (returns nothing)
+        self.function = fn                      # the function itself (Action returns nothing, Condition returns T/F)
         self.human_name = human_name            # (optional) human name, for use in interactives
         self.description = human_description    # (optional) human description, for use in interactives
 
@@ -17,22 +16,12 @@ class ActionPrimitive(tuple):
         return self.function(*args)
 
 
-class ConditionalPrimitive(tuple):
-    def __new__(cls, fn_name, fn, human_name=None, human_description=None):
-        arg_list = [fn_name, fn, human_name, human_description]
-        # noinspection PyArgumentList
-        return super(ConditionalPrimitive, cls).__new__(cls, arg_list)
+class ActionPrimitive(Primitive):
+    pass
 
-    def __init__(self, fn_name, fn, human_name=None, human_description=None):
-        # super(ConditionalPrimitive, self).__init__((fn_name, fn, human_name, human_description))
-        super(ConditionalPrimitive, self).__init__()
-        self.fn_name = fn_name                  # internal identifier for function
-        self.function = fn                      # the condition function itself (returns T/F)
-        self.human_name = human_name            # (optional) human name, for use in interactives
-        self.description = human_description    # (optional) human description, for use in interactives
 
-    def __call__(self, *args, **kwargs):
-        return self.function(*args)
+class ConditionalPrimitive(Primitive):
+    pass
 
 #  ignore below this line...
 
