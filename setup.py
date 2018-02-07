@@ -5,11 +5,21 @@ setup(name='instruction_graph',
       version='0.1.1',
       author='Aaron Roth and others',
       author_email='coralpeppercmu@gmail.com',
-      # TODO update these
+      # TODO update these - urls and descriptions
       url='https://www.cmu.edu',
       description="An implementation of instruction graph.",
-      long_description="This package provide the Instruction Graph framework."
-                       "Use it to control robots or other agents. See documentation on the github.",
+      long_description='''
+      Instruction Graph
+      =================
+      
+      This package provides the Instruction Graph framework.
+      
+      Use it to control robots or other agents.
+      
+      See documentation on the github_ .
+
+      .. _github: https://www.cmu.edu
+      ''',
       # py_modules=['instruction_graph',
       #            'instruction_graph.core',
       #            'instruction_graph.example'],
