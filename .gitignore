@@ -7,5 +7,5 @@ build
 ToDo.md
 notes.txt
 instruction_graph*.tar.gz
-instruction_graph.egg_info
+instruction_graph.egg-info
 MANIFEST
