@@ -20,6 +20,7 @@ setup(name='instruction_graph',
 
       .. _github: https://www.cmu.edu
       ''',
+      packages=['instruction_graph'],
       # py_modules=['instruction_graph',
       #            'instruction_graph.core',
       #            'instruction_graph.example'],

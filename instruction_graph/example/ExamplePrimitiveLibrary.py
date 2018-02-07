@@ -1,5 +1,6 @@
-from components.PrimitiveLibrary import BasePrimitiveLibrary
-from components.PrimitiveTuples import ActionPrimitive as Action, ConditionalPrimitive as Cond
+from instruction_graph.components.PrimitiveLibrary import BasePrimitiveLibrary
+
+from instruction_graph.components.PrimitiveTuples import ActionPrimitive as Action, ConditionalPrimitive as Cond
 
 
 # This is an example of a python file you might create to serve as a Primitive Library

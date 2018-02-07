@@ -1,10 +1,12 @@
 import os
-from glob import glob
 import unittest as ut
+from glob import glob
+
 # sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from core.Manager import Manager
-from example.DefaultProvider import DefaultProvider
-from example.ExamplePrimitiveLibrary import ExamplePrimitiveLibrary
+from instruction_graph.core.Manager import Manager
+from instruction_graph.example.DefaultProvider import DefaultProvider
+
+from instruction_graph.example.ExamplePrimitiveLibrary import ExamplePrimitiveLibrary
 
 
 class TestBasic(ut.TestCase):

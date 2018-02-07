@@ -1,5 +1,6 @@
 .idea
 generated
+instruction_graph/generated
 dist
 build
 *.pyc

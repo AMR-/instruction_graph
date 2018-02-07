@@ -1,4 +1,4 @@
-from components.Provider import BaseProvider
+from instruction_graph.components.Provider import BaseProvider
 
 
 class DefaultProvider(BaseProvider):
