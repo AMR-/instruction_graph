@@ -10,7 +10,6 @@ class Manager:
     # provider - optionally, include a provider (instance of a class that extends BaseProvider)
     def __init__(self, library, provider=None):
         print("Behavior Manager initialized")
-        self.test = 0
         self.ig = None  # TODO don't force ppl to refer to the ig directly, give convenience methods in the Manager
         self.ig_key = 'instruction_graph'
         self.library = library
@@ -44,77 +43,87 @@ class Manager:
     def get_ig_file(file_name):
         return klepto.archives.file_archive(file_name, serialized=True)
 
-    def next_node(self):
-        if len(self.ig.currentNode.neighbors) > 0:
-            self.ig.currentNode = self.ig.currentNode.neighbors[0]
-        else:
-            self.ig.currentNode = None
+    def run(self):
+        self.ig.reset()
+        while self._step():
+            pass
 
-    def step(self):
-        def check_condition(node):
-            if node.useProvider:
-                # cond = self.impStore.functionStore[node.Fn](
-                cond_result = self.library.get_condition(node.Fn)(
-                    self.provider, *node.FnArgs
-                )
-            else:
-                # cond = self.impStore.functionStore[node.Fn](
-                cond_result = self.library.get_condition(node.Fn)(
-                    *node.FnArgs
-                )
-                # cond = eval(self.ig.currentNode.codeStr, self.scope)
-            return cond_result
+    def _step(self):
         if self.ig.currentNode is not None:
-            print("executing step ", self.ig.currentNode.Fn, ' ', self.ig.currentNode.FnArgs)
-            print(self.ig.currentNode.neighbors)
-            if self.ig.currentNode.type == InstructionNode.ACTION:
-                print("executing action ")
-                if self.ig.currentNode.useProvider:
-                    # self.impStore.functionStore[self.ig.currentNode.Fn](
-                    self.library.get_action(self.ig.currentNode.Fn)(
-                        self.provider, *self.ig.currentNode.FnArgs
-                    )
-                else:
-                    # self.impStore.functionStore[self.ig.currentNode.Fn](
-                    self.library.get_action(self.ig.currentNode.Fn)(
-                        *self.ig.currentNode.FnArgs
-                    )
-                time.sleep(1)
-                self.next_node()
-            elif self.ig.currentNode.type == InstructionNode.LOOP:
-                print("checking loop condition %s" % self.ig.currentNode.Fn)
-                cond = check_condition(self.ig.currentNode)
-                if cond:
-                    print("condition true, continuing the loop")
-                    self.next_node()
-                else:
-                    print("condition false, exiting the loop")
-                    if len(self.ig.currentNode.neighbors[1].neighbors) > 1:
-                        self.ig.currentNode = self.ig.currentNode.neighbors[1].neighbors[1]
-                    else:
-                        self.ig.currentNode = None
-            elif self.ig.currentNode.type == InstructionNode.CONDITIONAL:
-                print("checking if condition")
-                cond = check_condition(self.ig.currentNode)
-                if cond:
-                    print("if condition true")
-                    self.ig.currentNode = self.ig.currentNode.neighbors[0]
-                else:
-                    print("if condition false, exiting the loop")
-                    self.ig.currentNode = self.ig.currentNode.neighbors[1]
-
-            elif self.ig.currentNode.type == InstructionNode.ENDLOOP:
-                print("endloop node")
-                self.next_node()
-            else:
-                print("node type: %s" % self.ig.currentNode.type)
-                self.next_node()
+            self._execute_current_node()
             return True
         else:
             print("end of execution")
             return False
 
-    def run(self):
-        self.ig.reset()
-        while self.step():
-            pass
+    def _execute_current_node(self):
+        print("executing step ", self.ig.currentNode.Fn, ' ', self.ig.currentNode.FnArgs)
+        print(self.ig.currentNode.neighbors)
+        if self.ig.currentNode.type == InstructionNode.ACTION:
+            self._execute_action_node()
+        elif self.ig.currentNode.type == InstructionNode.LOOP:
+            self._execute_loop_node()
+        elif self.ig.currentNode.type == InstructionNode.CONDITIONAL:
+            self._execute_condition_node()
+        elif self.ig.currentNode.type == InstructionNode.ENDLOOP:
+            self._execute_end_loop_node()
+        else:
+            print("node type: %s" % self.ig.currentNode.type)
+            self._next_node()
+
+    def _execute_action_node(self):
+        print("executing action ")
+        if self.ig.currentNode.useProvider:
+            self.library.get_action(self.ig.currentNode.Fn)(
+                self.provider, *self.ig.currentNode.FnArgs
+            )
+        else:
+            self.library.get_action(self.ig.currentNode.Fn)(
+                *self.ig.currentNode.FnArgs
+            )
+        time.sleep(1)
+        self._next_node()
+
+    def _execute_loop_node(self):
+        print("checking loop condition %s" % self.ig.currentNode.Fn)
+        cond = self._check_condition(self.ig.currentNode)
+        if cond:
+            print("condition true, continuing the loop")
+            self._next_node()
+        else:
+            print("condition false, exiting the loop")
+            if len(self.ig.currentNode.neighbors[1].neighbors) > 1:
+                self.ig.currentNode = self.ig.currentNode.neighbors[1].neighbors[1]
+            else:
+                self.ig.currentNode = None
+
+    def _execute_end_loop_node(self):
+        print("endloop node")
+        self._next_node()
+
+    def _execute_condition_node(self):
+        print("checking if condition")
+        cond = self._check_condition(self.ig.currentNode)
+        if cond:
+            print("if condition true")
+            self.ig.currentNode = self.ig.currentNode.neighbors[0]
+        else:
+            print("if condition false, exiting the loop")
+            self.ig.currentNode = self.ig.currentNode.neighbors[1]
+
+    def _check_condition(self, node):
+        if node.useProvider:
+            condition_result = self.library.get_condition(node.Fn)(
+                self.provider, *node.FnArgs
+            )
+        else:
+            condition_result = self.library.get_condition(node.Fn)(
+                *node.FnArgs
+            )
+        return condition_result
+
+    def _next_node(self):
+        if len(self.ig.currentNode.neighbors) > 0:
+            self.ig.currentNode = self.ig.currentNode.neighbors[0]
+        else:
+            self.ig.currentNode = None
