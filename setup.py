@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(name='instruction_graph',
-      version='0.1.1',
+      version='0.1.3',
       author='Aaron Roth and others',
       author_email='coralpeppercmu@gmail.com',
       # TODO update these - urls and descriptions
@@ -20,7 +20,10 @@ setup(name='instruction_graph',
 
       .. _github: https://www.cmu.edu
       ''',
-      packages=['instruction_graph'],
+      packages=['instruction_graph',
+                'instruction_graph.components',
+                'instruction_graph.core',
+                'instruction_graph.example'],
       # py_modules=['instruction_graph',
       #            'instruction_graph.core',
       #            'instruction_graph.example'],
