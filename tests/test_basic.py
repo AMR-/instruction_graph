@@ -43,11 +43,11 @@ class TestBasic(ut.TestCase):
 
     def test_create_and_save_simple_IG(self):
         self.igm.create_new_ig()
-        self.igm.ig.addAction("fun_zero", args=["Action 1"], pass_provider=False)
-        self.igm.ig.addAction("fun_hello")
-        self.igm.ig.addAction("fun_zero", args=["Action 3"])
-        self.igm.ig.addAction("fun_hello")
-        self.igm.ig.addAction("fun_set", args=["key1", "val1"], pass_provider=True)
+        self.igm.ig.add_action("fun_zero", args=["Action 1"], pass_provider=False)
+        self.igm.ig.add_action("fun_hello")
+        self.igm.ig.add_action("fun_zero", args=["Action 3"])
+        self.igm.ig.add_action("fun_hello")
+        self.igm.ig.add_action("fun_set", args=["key1", "val1"], pass_provider=True)
         ig1_name = TestBasic.simple_ig
         ig1_path = TestBasic.out_folder + ig1_name
         TestBasic.igs[TestBasic.simple_ig] = ig1_path
@@ -62,10 +62,10 @@ class TestBasic(ut.TestCase):
     def test_create_and_save_cond_loop_IG(self):
         ct = "count"
         self.igm.create_new_ig()
-        self.igm.ig.addAction("fun_set", args=[ct, 0], pass_provider=True)
-        self.igm.ig.addLoop('less', args=[ct, 4], pass_provider=True)
-        self.igm.ig.addAction("inc", args=[ct], pass_provider=True)
-        self.igm.ig.addEndLoop()
+        self.igm.ig.add_action("fun_set", args=[ct, 0], pass_provider=True)
+        self.igm.ig.add_loop('less', args=[ct, 4], pass_provider=True)
+        self.igm.ig.add_action("inc", args=[ct], pass_provider=True)
+        self.igm.ig.add_end_loop()
         ig2_path = TestBasic.out_folder + TestBasic.loop_ig
         TestBasic.igs[TestBasic.loop_ig] = ig2_path
         self.igm.save_ig(ig2_path)
@@ -80,18 +80,18 @@ class TestBasic(ut.TestCase):
         ct = "count1"
         ct2 = "count2"
         self.igm.create_new_ig()
-        self.igm.ig.addAction("fun_set", args=[ct, 0], pass_provider=True)
-        self.igm.ig.addAction("fun_set", args=[ct2, 10], pass_provider=True)
-        self.igm.ig.addIf('less', args=[ct, 4], pass_provider=True)
-        self.igm.ig.addAction("fun_set", args=[ct, "Yes"], pass_provider=True)
-        self.igm.ig.addElse()
-        self.igm.ig.addAction("fun_set", args=[ct, "No"], pass_provider=True)
-        self.igm.ig.addEndIf()
-        self.igm.ig.addIf('less', args=[ct2, 4], pass_provider=True)
-        self.igm.ig.addAction("fun_set", args=[ct2, "Yes"], pass_provider=True)
-        self.igm.ig.addElse()
-        self.igm.ig.addAction("fun_set", args=[ct2, "No"], pass_provider=True)
-        self.igm.ig.addEndIf()
+        self.igm.ig.add_action("fun_set", args=[ct, 0], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct2, 10], pass_provider=True)
+        self.igm.ig.add_if('less', args=[ct, 4], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct, "Yes"], pass_provider=True)
+        self.igm.ig.add_else()
+        self.igm.ig.add_action("fun_set", args=[ct, "No"], pass_provider=True)
+        self.igm.ig.add_end_if()
+        self.igm.ig.add_if('less', args=[ct2, 4], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct2, "Yes"], pass_provider=True)
+        self.igm.ig.add_else()
+        self.igm.ig.add_action("fun_set", args=[ct2, "No"], pass_provider=True)
+        self.igm.ig.add_end_if()
         ig3_path = TestBasic.out_folder + TestBasic.conditional_ig
         TestBasic.igs[TestBasic.conditional_ig] = ig3_path
         self.igm.save_ig(ig3_path)
