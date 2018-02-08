@@ -42,35 +42,35 @@ class IG:
         self.currentNode = self.start
         ## TODO perhaps self.currentNode be define on IG and not InstructionNode?
 
-    def addAction(self, fn_name, parentNode=None, args=None, pass_provider=False):
-        if (parentNode is None):
-            parentNode = self.currentNode
+    def add_action(self, fn_name, parent_node=None, args=None, pass_provider=False):
+        if (parent_node is None):
+            parent_node = self.currentNode
         #print "adding action ", code
         print("adding action %s with %d arguments and %s provider." % (fn_name,
             len(args) if args is not None else 0,
             'WITH passing a' if pass_provider else 'not passing a'))
         #print "parent; ", parentNode.codeStr
         # print "parent; ", parentNode.Fn, ' ', parentNode.FnArgs
-        print("parent; %s %s" % (parentNode.Fn, parentNode.FnArgs))
+        print("parent; %s %s" % (parent_node.Fn, parent_node.FnArgs))
         n = InstructionNode()
         n.type = InstructionNode.ACTION
         #n.codeStr = code
         n.Fn = fn_name
         n.FnArgs = args if args is not None else []
         n.useProvider = pass_provider
-        parentNode.neighbors.append(n)
+        parent_node.neighbors.append(n)
         self.currentNode = n
 
-    def addIf(self, condition, parentNode = None, args=None, pass_provider=False):
-        if (parentNode is None):
-            parentNode = self.currentNode
+    def add_if(self, condition, parent_node = None, args=None, pass_provider=False):
+        if (parent_node is None):
+            parent_node = self.currentNode
         n = InstructionNode()
         n.type = InstructionNode.CONDITIONAL
         #n.codeStr = condition
         n.Fn = condition
         n.FnArgs = args if args is not None else []
         n.useProvider = pass_provider
-        parentNode.neighbors.append(n)
+        parent_node.neighbors.append(n)
         self.instructionStack.append(n)
         for i in range(3):
             t = InstructionNode()
@@ -86,19 +86,19 @@ class IG:
 
         self.currentNode = n.neighbors[0]
 
-    def addElse(self):
+    def add_else(self):
         ifnode = self.instructionStack[-1]
         self.currentNode.neighbors.append(ifnode.neighbors[2])
         self.currentNode = ifnode.neighbors[1]
 
-    def addEndIf(self):
+    def add_end_if(self):
         ifnode = self.instructionStack.pop()
         self.currentNode.neighbors.append(ifnode.neighbors[2])
         self.currentNode = ifnode.neighbors[2]
         if len(ifnode.neighbors[1].neighbors) == 0:
             ifnode.neighbors[1].neighbors.append(ifnode.neighbors[2])
 
-    def addLoop(self, condition, parent_node=None, args=None, pass_provider=False):
+    def add_loop(self, condition, parent_node=None, args=None, pass_provider=False):
         if (parent_node is None):
             parent_node = self.currentNode
         n = InstructionNode()
@@ -112,27 +112,27 @@ class IG:
         self.currentNode = n
         self.instructionStack.append(n)
 
-    def addEndLoop(self, parentNode = None):
-        if (parentNode is None):
-            parentNode = self.currentNode
+    def add_end_loop(self, parent_node = None):
+        if (parent_node is None):
+            parent_node = self.currentNode
         n = InstructionNode()
         n.type = InstructionNode.ENDLOOP
         #n.codeStr = ""
         n.Fn = ""
-        parentNode.neighbors.append(n)
+        parent_node.neighbors.append(n)
         self.currentNode = n
         beginLoop = self.instructionStack.pop()
 
         self.currentNode.neighbors.append(beginLoop)
         beginLoop.neighbors.append(self.currentNode)
 
-    def addStop(self, parentNode=None):
-        if (parentNode is None):
-            parentNode = self.currentNode
+    def add_stop(self, parent_node=None):
+        if (parent_node is None):
+            parent_node = self.currentNode
 
-        parentNode.neighbors.append(self.stop)
+        parent_node.neighbors.append(self.stop)
 
-    def printNodes(self):
+    def print_nodes(self):
         n = self.start
         while n is not None:
             print(n.type, " ", n.Fn if n.Fn is not None else n.condition, " ", n.neighbors)
