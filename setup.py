@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(name='instruction_graph',
-      version='0.1.3',
+      version='0.1.4',
       author='Aaron Roth and others',
       author_email='coralpeppercmu@gmail.com',
       # TODO update these - urls and descriptions

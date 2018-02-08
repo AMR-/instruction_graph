@@ -19,6 +19,7 @@ class BasePrimitiveLibrary(object):
         self.condition_store = []       # Dictionary of ConditionalPrimitives by function Name
         self.condition_raw_list = []    # Lit of Condition Primitives
         self.true_lam_name = "true_lam"
+        self._validate_primitives()
         self._set_action_tuples(self.list_action_primitives())
         self._set_conditional_tuples(self.list_conditional_primitives())
 
@@ -44,6 +45,10 @@ class BasePrimitiveLibrary(object):
     # retrieve the function for this function name
     def get_condition(self, fn_name):
         return self.condition_store[fn_name]
+
+    # Check that provided Primitives are actually primitives.  Also checks that identifying strings are unique
+    def _validate_primitives(self):
+        pass  # TODO  -- check each, if type found wanting, throw an error
 
     # pass a list of ActionPrimitives
     def _set_action_tuples(self, action_primitive_tuples):

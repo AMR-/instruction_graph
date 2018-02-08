@@ -10,6 +10,7 @@ class Manager:
     # provider - optionally, include a provider (instance of a class that extends BaseProvider)
     def __init__(self, library, provider=None):
         print("Behavior Manager initialized")
+        # TODO validate that library and provider are sublcassing the appropriate base objects
         self.ig = None  # TODO don't force ppl to refer to the ig directly, give convenience methods in the Manager
         self.ig_key = 'instruction_graph'
         self.library = library
