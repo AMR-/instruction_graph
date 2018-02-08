@@ -40,13 +40,13 @@ class IG:
         self.currentNode = n
 
     def add_if(self, condition, parent_node = None, args=None, pass_provider=False,
-               not_condition=False  # check if the condition is false, instead of true (add a NOT)
+               negation=False  # check if the condition is false, instead of true (add a NOT)
                ):
         if (parent_node is None):
             parent_node = self.currentNode
         n = InstructionNode()
         n.type = InstructionNode.CONDITIONAL
-        n.c_not = not_condition
+        n.c_not = negation
         #n.codeStr = condition
         n.Fn = condition
         n.FnArgs = args if args is not None else []
@@ -80,13 +80,13 @@ class IG:
             ifnode.neighbors[1].neighbors.append(ifnode.neighbors[2])
 
     def add_loop(self, condition, parent_node=None, args=None, pass_provider=False,
-                 not_condition=False  # check if the condition is false, instead of true (add a NOT)
+                 negation=False  # check if the condition is false, instead of true (add a NOT)
                  ):
         if (parent_node is None):
             parent_node = self.currentNode
         n = InstructionNode()
         n.type = InstructionNode.LOOP
-        n.c_not = not_condition
+        n.c_not = negation
 
         n.Fn = condition
         n.FnArgs = args if args is not None else []

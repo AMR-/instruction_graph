@@ -91,13 +91,13 @@ class TestBasic(ut.TestCase):
         self.igm.ig.add_action("fun_set", args=[ct, "No"], pass_provider=True)
         self.igm.ig.add_end_if()
 
-        self.igm.ig.add_if('less', args=[ct2, 4], pass_provider=True, not_condition=False)
+        self.igm.ig.add_if('less', args=[ct2, 4], pass_provider=True, negation=False)
         self.igm.ig.add_action("fun_set", args=[ct2, "Yes"], pass_provider=True)
         self.igm.ig.add_else()
         self.igm.ig.add_action("fun_set", args=[ct2, "No"], pass_provider=True)
         self.igm.ig.add_end_if()
 
-        self.igm.ig.add_if('less', args=[ct3, 4], pass_provider=True, not_condition=True)
+        self.igm.ig.add_if('less', args=[ct3, 4], pass_provider=True, negation=True)
         self.igm.ig.add_action("fun_set", args=[ct3, "Yes"], pass_provider=True)
         self.igm.ig.add_else()
         self.igm.ig.add_action("fun_set", args=[ct3, "No"], pass_provider=True)
