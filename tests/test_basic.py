@@ -79,19 +79,30 @@ class TestBasic(ut.TestCase):
     def test_create_and_save_cond_if_IG(self):
         ct = "count1"
         ct2 = "count2"
+        ct3 = "count3"
         self.igm.create_new_ig()
         self.igm.ig.add_action("fun_set", args=[ct, 0], pass_provider=True)
         self.igm.ig.add_action("fun_set", args=[ct2, 10], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct3, 10], pass_provider=True)
+
         self.igm.ig.add_if('less', args=[ct, 4], pass_provider=True)
         self.igm.ig.add_action("fun_set", args=[ct, "Yes"], pass_provider=True)
         self.igm.ig.add_else()
         self.igm.ig.add_action("fun_set", args=[ct, "No"], pass_provider=True)
         self.igm.ig.add_end_if()
-        self.igm.ig.add_if('less', args=[ct2, 4], pass_provider=True)
+
+        self.igm.ig.add_if('less', args=[ct2, 4], pass_provider=True, not_condition=False)
         self.igm.ig.add_action("fun_set", args=[ct2, "Yes"], pass_provider=True)
         self.igm.ig.add_else()
         self.igm.ig.add_action("fun_set", args=[ct2, "No"], pass_provider=True)
         self.igm.ig.add_end_if()
+
+        self.igm.ig.add_if('less', args=[ct3, 4], pass_provider=True, not_condition=True)
+        self.igm.ig.add_action("fun_set", args=[ct3, "Yes"], pass_provider=True)
+        self.igm.ig.add_else()
+        self.igm.ig.add_action("fun_set", args=[ct3, "No"], pass_provider=True)
+        self.igm.ig.add_end_if()
+
         ig3_path = TestBasic.out_folder + TestBasic.conditional_ig
         TestBasic.igs[TestBasic.conditional_ig] = ig3_path
         self.igm.save_ig(ig3_path)
@@ -105,6 +116,7 @@ class TestBasic(ut.TestCase):
         self.igm.run()
         self.assertEqual(TestBasic.provider.get("count1"), "Yes")
         self.assertEqual(TestBasic.provider.get("count2"), "No")
+        self.assertEqual(TestBasic.provider.get("count3"), "Yes")
 
     def tearDown(self):
         # noinspection PyAttributeOutsideInit

@@ -3,6 +3,7 @@ import klepto
 import time
 from .IG import IG
 from .IG import InstructionNode
+from operator import xor
 
 
 class Manager:
@@ -65,7 +66,7 @@ class Manager:
         elif self.ig.currentNode.type == InstructionNode.LOOP:
             self._execute_loop_node()
         elif self.ig.currentNode.type == InstructionNode.CONDITIONAL:
-            self._execute_condition_node()
+            self._execute_if_condition_node()
         elif self.ig.currentNode.type == InstructionNode.ENDLOOP:
             self._execute_end_loop_node()
         else:
@@ -87,7 +88,7 @@ class Manager:
 
     def _execute_loop_node(self):
         print("checking loop condition %s" % self.ig.currentNode.Fn)
-        cond = self._check_condition(self.ig.currentNode)
+        cond = self._check_condition_as_requested_by_node(self.ig.currentNode)
         if cond:
             print("condition true, continuing the loop")
             self._next_node()
@@ -102,15 +103,19 @@ class Manager:
         print("endloop node")
         self._next_node()
 
-    def _execute_condition_node(self):
+    def _execute_if_condition_node(self):
         print("checking if condition")
-        cond = self._check_condition(self.ig.currentNode)
+        cond = self._check_condition_as_requested_by_node(self.ig.currentNode)
         if cond:
             print("if condition true")
             self.ig.currentNode = self.ig.currentNode.neighbors[0]
         else:
             print("if condition false, exiting the loop")
             self.ig.currentNode = self.ig.currentNode.neighbors[1]
+
+    # Checks the condition that is on the node, and if the NOT boolean is set, flips it
+    def _check_condition_as_requested_by_node(self, node):
+        return xor(self._check_condition(node), node.c_not)
 
     def _check_condition(self, node):
         if node.useProvider:

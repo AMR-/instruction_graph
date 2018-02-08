@@ -1,27 +1,5 @@
 
 
-class InstructionNode:
-    START = 0
-    STOP = 1
-    EMPTY = 2
-    ACTION = 3
-    CONDITIONAL = 4
-    LOOP = 5
-    ENDLOOP = 6
-
-    def __init__(self):
-        self.type = None
-        self.ctype = None # rename, for use with conditionals, ie 'if', 'else', 'endif'
-        #self.codeStr = ""
-        self.Fn = None
-        self.FnArgs = []
-        self.useProvider = False
-        self.neighbors = []
-        self.currentNode = None
-        self.start = None
-        self.stop = None
-        self.stack = []
-
 
 class IG:
     """An implementation of the Instruction Graphs (Mericli et al., 2013) for robot task specification"""
@@ -61,11 +39,14 @@ class IG:
         parent_node.neighbors.append(n)
         self.currentNode = n
 
-    def add_if(self, condition, parent_node = None, args=None, pass_provider=False):
+    def add_if(self, condition, parent_node = None, args=None, pass_provider=False,
+               not_condition=False  # check if the condition is false, instead of true (add a NOT)
+               ):
         if (parent_node is None):
             parent_node = self.currentNode
         n = InstructionNode()
         n.type = InstructionNode.CONDITIONAL
+        n.c_not = not_condition
         #n.codeStr = condition
         n.Fn = condition
         n.FnArgs = args if args is not None else []
@@ -98,11 +79,14 @@ class IG:
         if len(ifnode.neighbors[1].neighbors) == 0:
             ifnode.neighbors[1].neighbors.append(ifnode.neighbors[2])
 
-    def add_loop(self, condition, parent_node=None, args=None, pass_provider=False):
+    def add_loop(self, condition, parent_node=None, args=None, pass_provider=False,
+                 not_condition=False  # check if the condition is false, instead of true (add a NOT)
+                 ):
         if (parent_node is None):
             parent_node = self.currentNode
         n = InstructionNode()
         n.type = InstructionNode.LOOP
+        n.c_not = not_condition
 
         n.Fn = condition
         n.FnArgs = args if args is not None else []
@@ -141,4 +125,27 @@ class IG:
             else:
                 n = None
 
+
+class InstructionNode:
+    START = 0
+    STOP = 1
+    EMPTY = 2
+    ACTION = 3
+    CONDITIONAL = 4
+    LOOP = 5
+    ENDLOOP = 6
+
+    def __init__(self):
+        self.type = None
+        self.ctype = None  # rename, for use with conditionals, ie 'if', 'else', 'endif'
+        #self.codeStr = ""
+        self.c_not = False  # for a condition, if it should be inverted (check if return is False, instead of True)
+        self.Fn = None
+        self.FnArgs = []
+        self.useProvider = False
+        self.neighbors = []
+        self.currentNode = None
+        self.start = None
+        self.stop = None
+        self.stack = []
 
