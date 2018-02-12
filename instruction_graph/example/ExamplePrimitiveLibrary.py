@@ -27,7 +27,9 @@ class ExamplePrimitiveLibrary(BasePrimitiveLibrary):
             Action(fn_name='fun_3', fn=self.fun_three,
                    human_name='Function 3'),    # can have name and no description
             Action(fn_name='inc', fn=self.f_inc, human_name='Increment Key',
-                   human_description='Increment the value found at the specified key by 1.')
+                   human_description='Increment the value found at the specified key by 1.'),
+            Action(fn_name='dec', fn=self.f_dec, human_name='Decrement Key',
+                   human_description='Decrement the value found at the specified key by 1.')
         ]
 
     def list_conditional_primitives(self):
@@ -65,6 +67,12 @@ class ExamplePrimitiveLibrary(BasePrimitiveLibrary):
         value = int(provider.get(key)) + 1
         provider.set(key, value)
         print("%s: %s (incremented)" % (key, value))
+
+    @staticmethod
+    def f_dec(provider, key):
+        value = int(provider.get(key)) - 1
+        provider.set(key, value)
+        print("%s: %s (decremented)" % (key, value))
 
     @staticmethod
     def fun_three(provider):

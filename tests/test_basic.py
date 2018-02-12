@@ -17,6 +17,7 @@ class TestBasic(ut.TestCase):
 
     simple_ig = "ig1.ig"
     loop_ig = "ig2.ig"
+    loop_neg_ig = "ig4.ig"
     conditional_ig = "ig3.ig"
 
     @classmethod
@@ -75,6 +76,23 @@ class TestBasic(ut.TestCase):
         self.igm.load_ig(TestBasic.igs[TestBasic.loop_ig])
         self.igm.run()
         self.assertEqual(TestBasic.provider.get("count"), 4)
+
+    def test_create_and_save_cond_loop_IG_with_negation(self):
+        ct = "count"
+        self.igm.create_new_ig()
+        self.igm.ig.add_action("fun_set", args=[ct, 6], pass_provider=True)
+        self.igm.ig.add_loop('less', args=[ct, 4], pass_provider=True, negation=True)
+        self.igm.ig.add_action("dec", args=[ct], pass_provider=True)
+        self.igm.ig.add_end_loop()
+        ig4_path = TestBasic.out_folder + TestBasic.loop_neg_ig
+        TestBasic.igs[TestBasic.loop_neg_ig] = ig4_path
+        self.igm.save_ig(ig4_path)
+        self.assertIn(TestBasic.loop_neg_ig, os.listdir(TestBasic.out_folder))
+
+    def test_load_and_run_cond_loop_IG_with_negation(self):
+        self.igm.load_ig(TestBasic.igs[TestBasic.loop_neg_ig])
+        self.igm.run()
+        self.assertEqual(TestBasic.provider.get("count"), 3)
 
     def test_create_and_save_cond_if_IG(self):
         ct = "count1"
