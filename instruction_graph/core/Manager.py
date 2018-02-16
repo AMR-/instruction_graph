@@ -59,7 +59,10 @@ class Manager:
             return False
 
     def _execute_current_node(self):
-        print("executing step ", self.ig.currentNode.Fn, ' ', self.ig.currentNode.FnArgs)
+        print("executing step ", self.ig.currentNode.type_str(),
+              self.ig.currentNode.Fn, self.ig.currentNode.FnArgs,
+              "Negation is %s" % self.ig.currentNode.c_not if self.ig.currentNode.takes_conditional_primitive()
+              else "[not conditional]")
         print(self.ig.currentNode.neighbors)
         if self.ig.currentNode.type == InstructionNode.ACTION:
             self._execute_action_node()
@@ -110,11 +113,13 @@ class Manager:
             print("if condition true")
             self.ig.currentNode = self.ig.currentNode.neighbors[0]
         else:
-            print("if condition false, exiting the loop")
+            print("if condition false")
             self.ig.currentNode = self.ig.currentNode.neighbors[1]
 
     # Checks the condition that is on the node, and if the NOT boolean is set, flips it
     def _check_condition_as_requested_by_node(self, node):
+        if node.c_not:
+            print("(Negation is in effect on this node.)")
         return xor(self._check_condition(node), node.c_not)
 
     def _check_condition(self, node):

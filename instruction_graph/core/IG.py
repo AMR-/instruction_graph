@@ -149,3 +149,10 @@ class InstructionNode:
         self.stop = None
         self.stack = []
 
+    def takes_conditional_primitive(self):
+        return self.type == InstructionNode.CONDITIONAL or self.type == InstructionNode.LOOP
+
+    # TDOD this who situation can be improved if I'm naming the enums now
+    def type_str(self):
+        return {0: "START", 1: "STOP", 2: "EMPTY", 3: "ACTION", 4: "IF", 5: "LOOP BEGIN", 6: "LOOP END"}[self.type]
+
