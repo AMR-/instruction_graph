@@ -45,9 +45,9 @@ class TestBasic(ut.TestCase):
     def test_create_and_save_simple_IG(self):
         self.igm.create_new_ig()
         self.igm.ig.add_action("fun_zero", args=["Action 1"], pass_provider=False)
-        self.igm.ig.add_action("fun_hello")
-        self.igm.ig.add_action("fun_zero", args=["Action 3"])
-        self.igm.ig.add_action("fun_hello")
+        self.igm.ig.add_action("fun_hello", pass_provider=False)
+        self.igm.ig.add_action("fun_zero", args=["Action 3"], pass_provider=False)
+        self.igm.ig.add_action("fun_hello", pass_provider=False)
         self.igm.ig.add_action("fun_set", args=["key1", "val1"], pass_provider=True)
         ig1_name = TestBasic.simple_ig
         ig1_path = TestBasic.out_folder + ig1_name
@@ -63,9 +63,9 @@ class TestBasic(ut.TestCase):
     def test_create_and_save_cond_loop_IG(self):
         ct = "count"
         self.igm.create_new_ig()
-        self.igm.ig.add_action("fun_set", args=[ct, 0], pass_provider=True)
-        self.igm.ig.add_loop('less', args=[ct, 4], pass_provider=True)
-        self.igm.ig.add_action("inc", args=[ct], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct, 0])
+        self.igm.ig.add_loop('less', args=[ct, 4])
+        self.igm.ig.add_action("inc", args=[ct])
         self.igm.ig.add_end_loop()
         ig2_path = TestBasic.out_folder + TestBasic.loop_ig
         TestBasic.igs[TestBasic.loop_ig] = ig2_path
@@ -80,9 +80,9 @@ class TestBasic(ut.TestCase):
     def test_create_and_save_cond_loop_IG_with_negation(self):
         ct = "count"
         self.igm.create_new_ig()
-        self.igm.ig.add_action("fun_set", args=[ct, 6], pass_provider=True)
-        self.igm.ig.add_loop('less', args=[ct, 4], pass_provider=True, negation=True)
-        self.igm.ig.add_action("dec", args=[ct], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct, 6])
+        self.igm.ig.add_loop('less', args=[ct, 4], negation=True)
+        self.igm.ig.add_action("dec", args=[ct])
         self.igm.ig.add_end_loop()
         ig4_path = TestBasic.out_folder + TestBasic.loop_neg_ig
         TestBasic.igs[TestBasic.loop_neg_ig] = ig4_path
@@ -99,26 +99,26 @@ class TestBasic(ut.TestCase):
         ct2 = "count2"
         ct3 = "count3"
         self.igm.create_new_ig()
-        self.igm.ig.add_action("fun_set", args=[ct, 0], pass_provider=True)
-        self.igm.ig.add_action("fun_set", args=[ct2, 10], pass_provider=True)
-        self.igm.ig.add_action("fun_set", args=[ct3, 10], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct, 0])
+        self.igm.ig.add_action("fun_set", args=[ct2, 10])
+        self.igm.ig.add_action("fun_set", args=[ct3, 10])
 
-        self.igm.ig.add_if('less', args=[ct, 4], pass_provider=True)
-        self.igm.ig.add_action("fun_set", args=[ct, "Yes"], pass_provider=True)
+        self.igm.ig.add_if('less', args=[ct, 4])
+        self.igm.ig.add_action("fun_set", args=[ct, "Yes"])
         self.igm.ig.add_else()
-        self.igm.ig.add_action("fun_set", args=[ct, "No"], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct, "No"])
         self.igm.ig.add_end_if()
 
-        self.igm.ig.add_if('less', args=[ct2, 4], pass_provider=True, negation=False)
-        self.igm.ig.add_action("fun_set", args=[ct2, "Yes"], pass_provider=True)
+        self.igm.ig.add_if('less', args=[ct2, 4], negation=False)
+        self.igm.ig.add_action("fun_set", args=[ct2, "Yes"])
         self.igm.ig.add_else()
-        self.igm.ig.add_action("fun_set", args=[ct2, "No"], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct2, "No"])
         self.igm.ig.add_end_if()
 
-        self.igm.ig.add_if('less', args=[ct3, 4], pass_provider=True, negation=True)
-        self.igm.ig.add_action("fun_set", args=[ct3, "Yes"], pass_provider=True)
+        self.igm.ig.add_if('less', args=[ct3, 4], negation=True)
+        self.igm.ig.add_action("fun_set", args=[ct3, "Yes"])
         self.igm.ig.add_else()
-        self.igm.ig.add_action("fun_set", args=[ct3, "No"], pass_provider=True)
+        self.igm.ig.add_action("fun_set", args=[ct3, "No"])
         self.igm.ig.add_end_if()
 
         ig3_path = TestBasic.out_folder + TestBasic.conditional_ig
