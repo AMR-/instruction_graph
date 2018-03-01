@@ -1,12 +1,12 @@
 # Transferable Augmented Instruction Graph
 
-Transferable Augmented Instruction Graph (TAIG) is a library that allows the creation of tasks plans for robots or other agent-systems that can be used across systms very easily.
+Transferable Augmented Instruction Graph (TAIG) is a library that allows the creation of task plans for robots or for other agent-systems.  These task plans can be transferred across systems very easily.
 
 Tasks are created in a graph form with conditionals and loops.  Nodes in the graph refer to "primitives" which are atomic units of work (actions for the system to perform) or conditions to test.
 
 Create an Instruction Graph, and associate it with a Primitive Library and Memory Object (noted below) and you can execute the task on a system.
 
-This paradigm is useful because it allows executing a single task plan across multiple robots/systems.  For a single robot, allows defining atmoic functionality once, and re-using it across all the tasks that that robot is to complete.
+This paradigm is useful because it allows executing a single task plan across multiple robots/systems.  For a single robot, allows defining atomic functionality once, and re-using it across all the tasks that that robot is to complete.
 
 # Installation
 
@@ -25,7 +25,7 @@ There are three components to the paradigm:
 
 The Memory Object has fields that store any information required by the application at runtime (session info, database connection, ROS topics, state information, and any other data the application will track and store).
 
-The Primitive Library is an object which holds a collection of Primitives.   A Primitive can be either an Action or a Condition.  Actions a simple actions that are performed.  Conditions are simple conditions that are tested, and can be used in an IF or WHILE node.  Each Primitive has at least a Primitive ID and a function. (See more details below.)
+The Primitive Library is an object which holds a collection of Primitives.   A Primitive can be either an Action or a Condition.  Actions are simple actions that are performed.  Conditions are simple conditions that are tested, and can be used in an IF or WHILE node.  Each Primitive has at least a Primitive ID and a function. (See more details below.)
 
 The Instruction Graph is a directed graph.  Each node contains a reference to a primitive.  When the graph is traversed, the function held by the Primitive to which the node refers is executed. (See more details below.)
 
@@ -122,7 +122,7 @@ There are two kinds of Primitives, Actions and Conditions.   Actions store atomi
 
 Primitive functions can be parameterized (they can take arguments).
 
-To create a primtiive, you will first define a function.  A function meant for an action primitive should not have a return value.  A function meant for a condition primtive should return `True` or `False`.
+To create a primitive, you will first define a function.  A function meant for an action primitive should not have a return value.  A function meant for a condition primtive should return `True` or `False`.
 
 See an example Primitive Library defined below.
 
