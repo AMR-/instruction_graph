@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
 
-class BaseProvider(object):
+class BaseMemory(object):
 
     __metaclass__ = ABCMeta
 
