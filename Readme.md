@@ -62,15 +62,15 @@ m.ig.add_action(A_SET, args=[COUNT,5])
 m.ig.add_action(A_SET, args=[HOW_COOL,"So awesome and cool."])
 
 m.ig.add_if(C_LESS, args=[COUNT, 10])
-m.ig.add_action(A_PRINT, args=["The count is less than 10", None])
+m.ig.add_action(A_PRINT, args=["The count is less than %d", 10])
 m.ig.add_else()
-m.ig.add_action(A_PRINT, args=["The count is NOT less than 10", None])
+m.ig.add_action(A_PRINT, args=["The count is NOT less than %d", 10])
 m.ig.add_end_if()
 
-m.ig.add_action(A_SET, args=[HOW_COOL])
+m.ig.add_action(A_GET, args=[HOW_COOL])
 m.save_ig("graph.ig")
 
-m.load_ig()
+m.load_ig("graph.ig")
 m.run()
 ```
 
@@ -90,6 +90,7 @@ Probably you will want some memory though.
 
 When creating the memory object, consider all the types of information that you may want to store.  This could be containers for application state information, connections to databases, or anything else you will need.
 
+Create a python file, for example `example_create.py`
 
 Consider this class, similar to DefaultMemory in the QuickStart example:
 ```python
@@ -99,8 +100,8 @@ from instruction_graph.components.Memory import BaseMemory
 class DefaultMemory2(BaseMemory):
     def __init__(self):
         super(DefaultMemory2, self).__init__()
-        self.vars = {}
-        self.database_connection
+        self.info = {}
+        self.database_connection = None
         self.counter = 0
         self.whatever = "data"
 
@@ -137,7 +138,7 @@ class ExamplePrimitiveLibrary2(BasePrimitiveLibrary):
     def list_action_primitives(self):
         return [
             Action(fn_name='set', fn=self.set_value, human_name='Set Function', human_description='Sets a value in the memory.'),
-            Action("print_args", self.print_args, "Print with Args", "Print the first argument interpolated with the second.")
+            Action("print_args", self.print_args, "Print with Args", "Print the first argument interpolated with the second."),
             Action("dec", self.decrement, "Decrement Key", "Decrement the value found at the specified key by 1")
         ]
 
@@ -219,8 +220,11 @@ Run this code to check it out!
 After you have created "graph_filename.ig," you can load it and run it.
 
 Use the following code to do so (you can reuse the existing Manager or create a new one as show).
+This can be in the same file, or in a new file called `example_run.py`
 ```python
 from instruction_graph import Manager
+from example_create import DefaultMemory2,ExamplePrimitiveLibrary2
+
 
 mem_obj = DefaultMemory2()
 eg_library = ExamplePrimitiveLibrary2()
