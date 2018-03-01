@@ -1,5 +1,6 @@
 from .core.Manager import Manager
-from .example.DefaultProvider import DefaultProvider
+from .example.DefaultMemory import DefaultMemory
+from .example.ExamplePrimitiveLibrary import ExamplePrimitiveLibrary
 from .components.PrimitiveLibrary import BasePrimitiveLibrary
 from .components.PrimitiveTuples import ActionPrimitive, ConditionalPrimitive
-from .components.Provider import BaseProvider
+from .components.Memory import BaseMemory

@@ -1,13 +1,13 @@
-from instruction_graph.components.Provider import BaseProvider
+from instruction_graph.components.Memory import BaseMemory
 
 
-class DefaultProvider(BaseProvider):
+class DefaultMemory(BaseMemory):
     def __init__(self):
-        super(DefaultProvider, self).__init__()
+        super(DefaultMemory, self).__init__()
         self.vars = {}
 
-    def provider_name(self):
-        return "Default_Provider"
+    def memory_name(self):
+        return "Default_Memory"
 
     def set(self, key, value):
         if not isinstance(key, str):

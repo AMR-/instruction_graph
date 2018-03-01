@@ -4,14 +4,14 @@ from glob import glob
 
 # sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from instruction_graph.core.Manager import Manager
-from instruction_graph.example.DefaultProvider import DefaultProvider
+from instruction_graph.example.DefaultMemory import DefaultMemory
 
 from instruction_graph.example.ExamplePrimitiveLibrary import ExamplePrimitiveLibrary
 
 
 class TestBasic(ut.TestCase):
 
-    provider = None
+    memory_obj = None
     out_folder = "generated/"  # WARNING: Test will delete .ig files from this folder before tests
     igs = {}
 
@@ -22,7 +22,7 @@ class TestBasic(ut.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.provider = DefaultProvider()
+        cls.memory_obj = DefaultMemory()
         cls.igs = {}
         del_path = cls.out_folder + "*.ig"
         for f in glob(del_path):
@@ -37,18 +37,18 @@ class TestBasic(ut.TestCase):
         pass
 
     def setUp(self):
-        TestBasic.provider = DefaultProvider()
+        TestBasic.memory_obj = DefaultMemory()
         library = ExamplePrimitiveLibrary()
         # noinspection PyAttributeOutsideInit
-        self.igm = Manager(library=library, provider=TestBasic.provider)
+        self.igm = Manager(library=library, memory=TestBasic.memory_obj)
 
     def test_create_and_save_simple_IG(self):
         self.igm.create_new_ig()
-        self.igm.ig.add_action("fun_zero", args=["Action 1"], pass_provider=False)
-        self.igm.ig.add_action("fun_hello", pass_provider=False)
-        self.igm.ig.add_action("fun_zero", args=["Action 3"], pass_provider=False)
-        self.igm.ig.add_action("fun_hello", pass_provider=False)
-        self.igm.ig.add_action("fun_set", args=["key1", "val1"], pass_provider=True)
+        self.igm.ig.add_action("fun_zero", args=["Action 1"], pass_memory_obj=False)
+        self.igm.ig.add_action("fun_hello", pass_memory_obj=False)
+        self.igm.ig.add_action("fun_zero", args=["Action 3"], pass_memory_obj=False)
+        self.igm.ig.add_action("fun_hello", pass_memory_obj=False)
+        self.igm.ig.add_action("fun_set", args=["key1", "val1"], pass_memory_obj=True)
         ig1_name = TestBasic.simple_ig
         ig1_path = TestBasic.out_folder + ig1_name
         TestBasic.igs[TestBasic.simple_ig] = ig1_path
@@ -58,7 +58,7 @@ class TestBasic(ut.TestCase):
     def test_load_and_run_simple_IG(self):
         self.igm.load_ig(TestBasic.igs[TestBasic.simple_ig])
         self.igm.run()
-        self.assertEquals(TestBasic.provider.get("key1"), "val1")
+        self.assertEquals(TestBasic.memory_obj.get("key1"), "val1")
 
     def test_create_and_save_cond_loop_IG(self):
         ct = "count"
@@ -75,7 +75,7 @@ class TestBasic(ut.TestCase):
     def test_load_and_run_cond_loop_IG(self):
         self.igm.load_ig(TestBasic.igs[TestBasic.loop_ig])
         self.igm.run()
-        self.assertEqual(TestBasic.provider.get("count"), 4)
+        self.assertEqual(TestBasic.memory_obj.get("count"), 4)
 
     def test_create_and_save_cond_loop_IG_with_negation(self):
         ct = "count"
@@ -92,7 +92,7 @@ class TestBasic(ut.TestCase):
     def test_load_and_run_cond_loop_IG_with_negation(self):
         self.igm.load_ig(TestBasic.igs[TestBasic.loop_neg_ig])
         self.igm.run()
-        self.assertEqual(TestBasic.provider.get("count"), 3)
+        self.assertEqual(TestBasic.memory_obj.get("count"), 3)
 
     def test_create_and_save_cond_if_IG(self):
         ct = "count1"
@@ -132,9 +132,9 @@ class TestBasic(ut.TestCase):
 
         self.igm.load_ig(TestBasic.igs[TestBasic.conditional_ig])
         self.igm.run()
-        self.assertEqual(TestBasic.provider.get("count1"), "Yes")
-        self.assertEqual(TestBasic.provider.get("count2"), "No")
-        self.assertEqual(TestBasic.provider.get("count3"), "Yes")
+        self.assertEqual(TestBasic.memory_obj.get("count1"), "Yes")
+        self.assertEqual(TestBasic.memory_obj.get("count2"), "No")
+        self.assertEqual(TestBasic.memory_obj.get("count3"), "Yes")
 
     def tearDown(self):
         # noinspection PyAttributeOutsideInit

@@ -104,12 +104,12 @@ class DefaultMemory2(BaseMemory):
         self.counter = 0
         self.whatever = "data"
 
-    def provider_name(self):
+    def memory_name(self):
         return "Another_Example_Memory"
  ```
 It has attributes that an application can use. A Memory object can define any attributes.
 
-Memory Object should extend BaseMemory, and implement the `provider_name` method.
+Memory Object should extend BaseMemory, and implement the `memory_name` method.
 
 If you want your application to publish to a ROS topic, we recommend adding the rospy.Publisher object as a value to an attribute of the Memory object.   If you want your application to subscribe to a ROS topic, we recommend adding that to the Memory as well, along with any callback (the callback could update additional values in the memory).  Primitives should not subscribe to topics directly, and Primitives should publish to ROS topics by referencing the Publisher on the Memory object.
 

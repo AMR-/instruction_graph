@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(name='instruction_graph',
-      version='0.2.0',
+      version='0.2.1',
       author='Aaron Roth and others',
       author_email='coralpeppercmu@gmail.com',
       url='https://github.com/AMR-/instruction_graph',
@@ -11,9 +11,9 @@ setup(name='instruction_graph',
       Instruction Graph
       =================
       
-      This package provides the Instruction Graph framework.
+      This package provides the Transferable Augmented Instruction Graph framework.
       
-      Use it to create and execute task plans for robots or other agents.  Specials are that task plans created using
+      Use it to create and execute task plans for robots or other agents.  Task plans created using
       this library can be run on any robot that uses this library. In this manner, task plans become very transferable.
       Differences between physical and software differences in robots can be accounted for.
       

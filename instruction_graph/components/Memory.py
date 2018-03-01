@@ -9,8 +9,8 @@ class BaseMemory(object):
         pass
 
     def __str__(self):
-        return self.provider_name()
+        return self.memory_name()
 
     @abstractmethod
-    def provider_name(self):
-        return 'BaseProvider'
+    def memory_name(self):
+        return 'BaseMemory'

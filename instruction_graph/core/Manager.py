@@ -8,21 +8,21 @@ from operator import xor
 
 class Manager:
     # library - pass an instance of a class that extends BasePrimitiveLibrary
-    # provider - optionally, include a provider (instance of a class that extends BaseProvider)
-    def __init__(self, library, provider=None):
+    # memory - optionally, include a memory (instance of a class that extends BaseMemory)
+    def __init__(self, library, memory=None):
         print("Behavior Manager initialized")
-        # TODO validate that library and provider are sublcassing the appropriate base objects
+        # TODO validate that library and memory are sublcassing the appropriate base objects
         self.ig = None  # TODO don't force ppl to refer to the ig directly, give convenience methods in the Manager
         self.ig_key = 'instruction_graph'
         self.library = library
-        self.provider = provider
-        print("Robot is initialized with library %s and provider %s." % (self.library, self.provider))
+        self.memory_obj = memory
+        print("Robot is initialized with library %s and memory object %s." % (self.library, self.memory_obj))
 
-    def reset_init(self, library, provider=None):
+    def reset_init(self, library, memory=None):
         self.ig = None
         self.library = library
-        self.provider = provider
-        print("Robot is reset with library %s and provider %s." % (self.library, self.provider))
+        self.memory_obj = memory
+        print("Robot is reset with library %s and memory object %s." % (self.library, self.memory_obj))
 
     def create_new_ig(self):
         self.ig = IG()
@@ -78,9 +78,9 @@ class Manager:
 
     def _execute_action_node(self):
         print("executing action ")
-        if self.ig.currentNode.useProvider:
+        if self.ig.currentNode.useMemory:
             self.library.get_action(self.ig.currentNode.Fn)(
-                self.provider, *self.ig.currentNode.FnArgs
+                self.memory_obj, *self.ig.currentNode.FnArgs
             )
         else:
             self.library.get_action(self.ig.currentNode.Fn)(
@@ -123,9 +123,9 @@ class Manager:
         return xor(self._check_condition(node), node.c_not)
 
     def _check_condition(self, node):
-        if node.useProvider:
+        if node.useMemory:
             condition_result = self.library.get_condition(node.Fn)(
-                self.provider, *node.FnArgs
+                self.memory_obj, *node.FnArgs
             )
         else:
             condition_result = self.library.get_condition(node.Fn)(

@@ -20,13 +20,13 @@ class IG:
     def reset(self):
         self.currentNode = self.start
 
-    def add_action(self, fn_name, parent_node=None, args=None, pass_provider=True):
+    def add_action(self, fn_name, parent_node=None, args=None, pass_memory_obj=True):
         if (parent_node is None):
             parent_node = self.currentNode
         #print "adding action ", code
-        print("adding action %s with %d arguments and %s provider." % (fn_name,
+        print("adding action %s with %d arguments and %s memory object." % (fn_name,
             len(args) if args is not None else 0,
-            'WITH passing a' if pass_provider else 'not passing a'))
+            'WITH passing a' if pass_memory_obj else 'not passing a'))
         #print "parent; ", parentNode.codeStr
         # print "parent; ", parentNode.Fn, ' ', parentNode.FnArgs
         print("parent; %s %s" % (parent_node.Fn, parent_node.FnArgs))
@@ -35,11 +35,11 @@ class IG:
         #n.codeStr = code
         n.Fn = fn_name
         n.FnArgs = args if args is not None else []
-        n.useProvider = pass_provider
+        n.useMemory = pass_memory_obj
         parent_node.neighbors.append(n)
         self.currentNode = n
 
-    def add_if(self, condition, parent_node = None, args=None, pass_provider=True,
+    def add_if(self, condition, parent_node = None, args=None, pass_memory_obj=True,
                negation=False  # check if the condition is false, instead of true (add a NOT)
                ):
         if (parent_node is None):
@@ -50,7 +50,7 @@ class IG:
         #n.codeStr = condition
         n.Fn = condition
         n.FnArgs = args if args is not None else []
-        n.useProvider = pass_provider
+        n.useMemory = pass_memory_obj
         parent_node.neighbors.append(n)
         self.instructionStack.append(n)
         for i in range(3):
@@ -79,7 +79,7 @@ class IG:
         if len(ifnode.neighbors[1].neighbors) == 0:
             ifnode.neighbors[1].neighbors.append(ifnode.neighbors[2])
 
-    def add_loop(self, condition, parent_node=None, args=None, pass_provider=True,
+    def add_loop(self, condition, parent_node=None, args=None, pass_memory_obj=True,
                  negation=False  # check if the condition is false, instead of true (add a NOT)
                  ):
         if (parent_node is None):
@@ -90,7 +90,7 @@ class IG:
 
         n.Fn = condition
         n.FnArgs = args if args is not None else []
-        n.useProvider = pass_provider
+        n.useMemory = pass_memory_obj
 
         parent_node.neighbors.append(n)
         self.currentNode = n
@@ -142,7 +142,7 @@ class InstructionNode:
         self.c_not = False  # for a condition, if it should be inverted (check if return is False, instead of True)
         self.Fn = None
         self.FnArgs = []
-        self.useProvider = False
+        self.useMemory = False
         self.neighbors = []
         self.start = None
         self.stop = None
