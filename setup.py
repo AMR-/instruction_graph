@@ -1,9 +1,10 @@
+# coding=utf-8
 # from distutils.core import setup
 from setuptools import setup
 
 setup(name='instruction_graph',
-      version='0.2.1',
-      author='Aaron Roth and others',
+      version='0.2.2',
+      author='Aaron Roth, Çetin Meriçli, and Steven D. Klee',
       author_email='coralpeppercmu@gmail.com',
       url='https://github.com/AMR-/instruction_graph',
       description="An implementation of Transferable Augmented Instruction Graph",
