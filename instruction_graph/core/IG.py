@@ -131,7 +131,7 @@ class InstructionNode:
     STOP = 1
     EMPTY = 2
     ACTION = 3
-    CONDITIONAL = 4
+    CONDITIONAL = 4  # this means an IF condition, not just any conditional
     LOOP = 5
     ENDLOOP = 6
 
