@@ -19,4 +19,7 @@ class PepperMemory(BaseMemory):
     def memory_name(self):
         return "Pepper_Example_Memory"
 
-States = Enum('SEARCHING', 'FOUND_PERSON')
+
+class States(Enum):
+    SEARCHING = 0
+    FOUND_PERSON = 1
