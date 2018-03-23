@@ -8,7 +8,7 @@ class Controller(object):
     def __init__(self, qi_app):
         self.qi = qi_app
         self.qi.start()
-        self.ig_file_name = "generated/pepper_demo.ig"
+        self.ig_file_name = "pepper_demo.ig"
         self.memory_object = PepperMemory(self.qi.session)
         self.library = PepperPrimitiveLibrary()
         self.igm = Manager(library=self.library, memory=self.memory_object)
@@ -18,7 +18,7 @@ class Controller(object):
         self.igm.ig.add_action(Pid.SAY, args=["I am Pepper.  I am going to search for a human by rotating."])
 
         self.igm.ig.add_loop(Pid.IS_SEARCHING)
-        self.igm.ig.add_action(Pid.ROTATE, args=['L', 0.5*math.pi])
+        self.igm.ig.add_action(Pid.ROTATE, args=['L', 0.25*math.pi])
 
         self.igm.ig.add_if(Pid.IS_HUMAN_VISIBLE)
         self.igm.ig.add_action(Pid.PERSON_FOUND)

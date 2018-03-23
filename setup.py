@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='instruction_graph',
-      version='0.2.4',
+      version='0.2.8',
       author='Aaron Roth, Çetin Meriçli, and Steven D. Klee',
       author_email='coralpeppercmu@gmail.com',
       url='https://github.com/AMR-/instruction_graph',
@@ -26,12 +26,7 @@ setup(name='instruction_graph',
                 'instruction_graph.components',
                 'instruction_graph.core',
                 'instruction_graph.example'],
-      # py_modules=['instruction_graph',
-      #            'instruction_graph.core',
-      #            'instruction_graph.example'],
-      # requires=['klepto'],
       install_requires=['klepto', 'enum34'],
-      # provides='instruction_graph',
       # scripts=['TextCommunicator.py'],
       scripts=['run_tests.py'],
       classifiers=[

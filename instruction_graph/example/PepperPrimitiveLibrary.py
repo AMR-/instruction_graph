@@ -30,11 +30,9 @@ class PepperPrimitiveLibrary(BasePrimitiveLibrary):
     def rotate(memory, direction, radians):
         if direction not in ['R', "L"]:
             raise ValueError("'direction' should be 'R' or 'L'")
-        fraction_max_speed = 0.3
-        turn = (-1)*radians if direction is 'R' else radians
-        joint_name = "Body"
+        angles = [0, 0, radians if 'L' else -radians]
         motion = memory.session.service("ALMotion")
-        motion.changeAngles(joint_name, turn, fraction_max_speed)
+        motion.moveTo(angles)
 
     @staticmethod
     def mark_person_found(memory):
@@ -52,14 +50,8 @@ class PepperPrimitiveLibrary(BasePrimitiveLibrary):
     def is_human_visible(memory):
         mem_proxy = memory.session.service("ALMemory")
         val = mem_proxy.getData("FaceDetected", 0)
-        if val and isinstance(val, list) and len(val) == 2:
-            print("this is the val")
-            print (val)
-            return True
-        else:
-            print("Nope, this is the val")
-            print(val)
-            return False
+        human_data_exists = (val is not None and isinstance(val, list) and len(val) == 5)
+        return human_data_exists
 
 
 # noinspection PyClassHasNoInit
