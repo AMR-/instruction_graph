@@ -1,4 +1,5 @@
 import argparse
+# noinspection PyPackageRequirements
 import qi
 
 
@@ -18,11 +19,19 @@ def init_qi_controller(controller, *c_args):
         return controller(None, c_args) if c_args else controller(None)
 
 
-def get_pepper_parser():
+def set_pepper_parser(parser):
+    Settings.parser = parser
+
+
+def init_pepper_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", type=str, help="Robot IP address. On robot or Local Naoqi: use '127.0.0.1'.")
     parser.add_argument("--port", type=int, help="Naoqi port number")
     return parser
+
+
+def get_pepper_parser():
+    return Settings.parser
 
 
 def initialize_qi_app(args):
@@ -31,3 +40,8 @@ def initialize_qi_app(args):
     print(connection_url)
     qi_app = qi.Application(["StandInit", "--qi-url=" + connection_url])
     return qi_app
+
+
+# noinspection PyClassHasNoInit
+class Settings:
+    parser = init_pepper_parser()
