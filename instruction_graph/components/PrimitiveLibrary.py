@@ -1,5 +1,6 @@
 import uuid
 from abc import ABCMeta, abstractmethod
+from instruction_graph import Manager
 
 
 # Users should implmenet subclasses of this, implementing list_action_primitives and
@@ -19,6 +20,7 @@ class BasePrimitiveLibrary(object):
         self.condition_store = []       # Dictionary of ConditionalPrimitives by function Name
         self.condition_raw_list = []    # Lit of Condition Primitives
         self.true_lam_name = "true_lam"
+        self.run_ig_name = "run_ig"
         self._validate_primitives()
         self._set_action_tuples(self.list_action_primitives())
         self._set_conditional_tuples(self.list_conditional_primitives())
@@ -54,13 +56,15 @@ class BasePrimitiveLibrary(object):
     def _set_action_tuples(self, action_primitive_tuples):
         self.action_raw_list = action_primitive_tuples
         self.action_store = dict(self._tuples_to_dict(action_primitive_tuples))
+        self.run_ig_name = self._find_unused_fnname(self.run_ig_name, self.condition_store)
+        self.action_store[self.run_ig_name] = BasePrimitiveLibrary._run_ig
 
     # pass a list of ConditionalPrimitives
     def _set_conditional_tuples(self, conditional_primitive_tuples):
         self.condition_raw_list = conditional_primitive_tuples
         self.condition_store = dict(self._tuples_to_dict(conditional_primitive_tuples))
         self.true_lam_name = self._find_unused_fnname(self.true_lam_name, self.condition_store)
-        self.condition_store[self.true_lam_name] = lambda: True
+        self.condition_store[self.true_lam_name] = lambda memory: True
 
     @staticmethod
     def _tuples_to_dict(tuple_lists):
@@ -74,3 +78,12 @@ class BasePrimitiveLibrary(object):
             unused = start + str(ct)
             ct = ct + 1
         return unused
+
+    # Default methods
+
+    # magic happens so that in this particular case, the library is passed as well
+    @staticmethod
+    def _run_ig(memory, library, ig_path=None):
+        mgr = Manager(library=library, memory=memory)
+        mgr.load_ig(ig_path if ig_path else memory.get_queued_ig())
+        mgr.run()

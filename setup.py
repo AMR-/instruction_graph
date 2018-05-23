@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='instruction_graph',
-      version='0.2.8',
+      version='0.2.9',
       author='Aaron Roth, Çetin Meriçli, and Steven D. Klee',
       author_email='coralpeppercmu@gmail.com',
       url='https://github.com/AMR-/instruction_graph',

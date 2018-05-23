@@ -29,6 +29,7 @@ class ExamplePrimitiveLibrary(BasePrimitiveLibrary):
                    human_description='Increment the value found at the specified key by 1.'),
             Action(fn_name='dec', fn=self.f_dec, human_name='Decrement Key',
                    human_description='Decrement the value found at the specified key by 1.'),
+            Action(fn_name='queue_ig', fn=self.queue_ig_prim),
             Action("print_args", self.print_args,
                    "Print with Args", "Print the first argument interpolated with the second.")
         ]
@@ -86,6 +87,10 @@ class ExamplePrimitiveLibrary(BasePrimitiveLibrary):
     def fun_three(memory):
         x = memory.get('x')
         print("x: %d" % x)
+
+    @staticmethod
+    def queue_ig_prim(memory, path):
+        memory.queue_ig_as_primitive(path)
 
     @staticmethod
     def con_less(memory, key, maximum):

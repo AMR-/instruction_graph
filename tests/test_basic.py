@@ -1,40 +1,22 @@
 import os
 import unittest as ut
-from glob import glob
+from test_base import TestBase
 
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from instruction_graph.core.Manager import Manager
 from instruction_graph.example.DefaultMemory import DefaultMemory
 
 from instruction_graph.example.ExamplePrimitiveLibrary import ExamplePrimitiveLibrary
 
 
-class TestBasic(ut.TestCase):
+class TestBasic(TestBase):
 
     memory_obj = None
-    out_folder = "generated/"  # WARNING: Test will delete .ig files from this folder before tests
     igs = {}
 
     simple_ig = "ig1.ig"
     loop_ig = "ig2.ig"
     loop_neg_ig = "ig4.ig"
     conditional_ig = "ig3.ig"
-
-    @classmethod
-    def setUpClass(cls):
-        cls.memory_obj = DefaultMemory()
-        cls.igs = {}
-        del_path = cls.out_folder + "*.ig"
-        for f in glob(del_path):
-            os.remove(f)
-            pass
-
-    @classmethod
-    def tearDownClass(cls):
-        # optionally, delete stuff in generated. for now, doing it just in setup so can
-        #   view igs after creation
-        # os.remove(glob(cls.out_folder + '*.ig'))
-        pass
 
     def setUp(self):
         TestBasic.memory_obj = DefaultMemory()
@@ -143,6 +125,7 @@ class TestBasic(ut.TestCase):
 
 def main():
     ut.main()
+
 
 if __name__ == "__main__":
     main()

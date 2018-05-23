@@ -50,6 +50,8 @@ class Manager:
         while self._step():
             pass
 
+    # Private
+
     def _step(self):
         if self.ig.currentNode is not None:
             self._execute_current_node()
@@ -77,6 +79,20 @@ class Manager:
             self._next_node()
 
     def _execute_action_node(self):
+        if self.ig.currentNode.Fn == self.library.run_ig_name:
+            self._execute_run_ig_node()
+        else:
+            self._execute_std_action_node()
+        time.sleep(0.5)
+        self._next_node()
+
+    def _execute_run_ig_node(self):
+        print("executing run_ig action")
+        self.library.get_action(self.ig.currentNode.Fn)(
+            self.memory_obj, self.library, *self.ig.currentNode.FnArgs
+        )
+
+    def _execute_std_action_node(self):
         print("executing action ")
         if self.ig.currentNode.useMemory:
             self.library.get_action(self.ig.currentNode.Fn)(
@@ -86,8 +102,6 @@ class Manager:
             self.library.get_action(self.ig.currentNode.Fn)(
                 *self.ig.currentNode.FnArgs
             )
-        time.sleep(1)
-        self._next_node()
 
     def _execute_loop_node(self):
         print("checking loop condition %s" % self.ig.currentNode.Fn)
