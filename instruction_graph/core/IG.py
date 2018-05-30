@@ -10,6 +10,7 @@ class IG:
         self.stop = InstructionNode()
         self.stop.type = InstructionNode.STOP
         self.stop.codeStr = "stop"
+        self.halt_condition = None
         self.reset()
         # During IG creation, instructionStack holds the
         #   stack of unclosed conditional-type nodes
@@ -115,6 +116,14 @@ class IG:
             parent_node = self.currentNode
 
         parent_node.neighbors.append(self.stop)
+
+    def set_halt_condition(self, fn_name, args=None, negation=False):
+        if fn_name:
+            print("adding halt condition %s with %d arguments" % (fn_name, len(args) if args is not None else 0))
+            self.halt_condition = (fn_name, args if args else [], negation)
+        else:
+            print("clearing halt condition")
+            self.halt_condition = None
 
     def print_nodes(self):
         n = self.start

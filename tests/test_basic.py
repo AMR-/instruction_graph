@@ -19,6 +19,7 @@ class TestBasic(TestBase):
     conditional_ig = "ig3.ig"
 
     def setUp(self):
+        # raise ut.SkipTest("DEBUG")
         TestBasic.memory_obj = DefaultMemory()
         library = ExamplePrimitiveLibrary()
         # noinspection PyAttributeOutsideInit

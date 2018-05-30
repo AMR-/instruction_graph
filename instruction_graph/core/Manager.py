@@ -148,7 +148,24 @@ class Manager:
         return condition_result
 
     def _next_node(self):
-        if len(self.ig.currentNode.neighbors) > 0:
+        halt = self._check_halt_condition_if_set()
+        if not halt and len(self.ig.currentNode.neighbors) > 0:
             self.ig.currentNode = self.ig.currentNode.neighbors[0]
         else:
             self.ig.currentNode = None
+
+    def _check_halt_condition_if_set(self):
+        if self.ig.halt_condition and self.ig.halt_condition[0]:
+            hcon = self._check_halt_condition()
+            if hcon:
+                print("The halt condition was triggered!  Halting.")
+                return hcon
+        else:
+            return False
+
+    def _check_halt_condition(self):
+        (fn_name, args, negation) = self.ig.halt_condition
+        condition_result = self.library.get_condition(fn_name)(
+            self.memory_obj, *args
+        )
+        return xor(condition_result, negation)

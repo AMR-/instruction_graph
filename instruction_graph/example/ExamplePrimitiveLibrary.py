@@ -38,7 +38,10 @@ class ExamplePrimitiveLibrary(BasePrimitiveLibrary):
         return [
             Cond(fn_name='less', fn=self.con_less, human_name='is less',
                  human_description="Checks if the value of a certain key is less than a given value.  "
-                                   "(Returns true if so.)")
+                                   "(Returns true if so.)"),
+            Cond(fn_name='less_or_no_key', fn=self.con_less_or_no_key, human_name='is less or no key',
+                 human_description="Checks if the value of a certain key is less than a given value.  "
+                                   "(Returns true if so, or if the key does not exist.)")
         ]
 
     # -- / end implementation of abstract functions --
@@ -94,5 +97,19 @@ class ExamplePrimitiveLibrary(BasePrimitiveLibrary):
 
     @staticmethod
     def con_less(memory, key, maximum):
+        try:
+            return ExamplePrimitiveLibrary._less(memory, key, maximum)
+        except KeyError:
+            return False
+
+    @staticmethod
+    def con_less_or_no_key(memory, key, maximum):
+        try:
+            return ExamplePrimitiveLibrary._less(memory, key, maximum)
+        except KeyError:
+            return True
+
+    @staticmethod
+    def _less(memory, key, maximum):
         value = int(memory.get(key))
         return value < maximum
