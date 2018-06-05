@@ -9,8 +9,16 @@ def regex(pattern):
 # Returns the index and matcher of the first match for n regexes,
 #   or the value (n+1, None) if there is no match
 def idx_1st_match(text, list_of_regex):
+    def rmatch(i, tex):
+        return list_of_regex[i].match(text)
     n = len(list_of_regex)
-    return next(((i, list_of_regex[i]) for i in range(n) if list_of_regex[i].match(text)), n+1)
+    return next(((i, rmatch(i, text)) for i in range(n) if rmatch(i, text)), (n, None))
+
+
+# Returns the index of the first function to return true for :text:, or the value n+1, for n functions
+def idx_1st_true_fn(text, list_of_fn):
+    n = len(list_of_fn)
+    return next((i for i in range(n) if list_of_fn[i](text)), n)
 
 
 def synchronized_method(method):

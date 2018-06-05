@@ -1,13 +1,69 @@
 from ..core.Manager import Manager
 from ..core.IG import InstructionNode as NodeState
-from utils import synchronized_method, regex, idx_1st_match
+from .utils import synchronized_method, regex, idx_1st_match, idx_1st_true_fn
 from enum import Enum
 import traceback
+
+
+class BuilderPhrases(object):
+    # noinspection PySingleQuotedDocstring
+    '''
+        Contains the regex for matching phrases the human says to the agent, as well as creating
+        the phrases that the agent will say to the human.
+        
+        For human input, the important inputs are
+        :teach_you: - for a human to initiate the construction of a new graph.  Other responses for
+        dialgoue thereafter during the construction are included as well
+        :run_ig: - for a human to initaite loading and running an existing ig
+        Any other response not in the middle of an interaction is construed as an instruction
+            to execute a primitive, and the primitives are checked.
+    '''
+    def __init__(self):
+        # == Human Input ==
+        # For a human to initiate creating an IG
+        self.CMD_GROUP = "cmd"
+        self.NEG_GROUP = "neg"
+        self.teach_you = regex("i will teach you to (.*)")
+        self.confirm_pos = regex("yes")
+        self.confirm_neg = regex("no")
+        self.teaching_done = regex("done (?:learning|teaching)")
+        # self.run_ig = regex("run the graph (.*)")
+        self.h_if_cond = regex("if (?P<neg>not )?(?P<cmd>.*)")
+        self.h_while_cond = regex("(?:while|loop) (?P<neg>not )?(?P<cmd>.*)")
+        self.h_end_if = regex("end if")
+        self.h_end_loop = regex("end loop")
+        self.run_ig = regex("run (.*)")
+
+        # == Agent Responses ==
+        self.agent_start = "Beginning interactive graph runner and builder."
+        self.exec_prim_success = ""
+        self.exec_prim_fail = "Could not find or run prim <prim_id>"
+        self.exec_prim_name_token = "<prim_id>"
+        self.exec_graph_success = ""
+        self.exec_graph_fail = "Could not find or run graph <prim_id>"
+        self.exec_graph_name_token = "<prim_id>"
+        self.build_new_graph = "I will learn to <name>?"
+        self.build_new_graph_filename_token = "<name>"
+        self.yes_learn = "Ok, I am ready to learn.  What is first?"
+        self.no_learn = "Ok"
+        self.unclear_confirm = "I don't understand. " \
+                               "Can you please confirm 'yes' or 'no' please?"
+        self.unclear_learn = "I don't understand. Please name a primitive to add or tell me I'm done."
+        self.confirm_new_primitive = "I should <name>?"
+        self.confirm_new_primitive_name_token = "<name>"
+        self.new_primitive_confirmed_pos = "Ok, what's next?"
+        self.new_primitive_confirmed_neg = "Ok, what's next?"
+        self.done_building_graph = "I have learned <name>?"
+        self.done_building_graph_filename_token = "<name>"
+
+        self.yes = "Yes"
+        self.no = "No"
 
 
 class InteractiveManager(Manager):
     def __init__(self, library, memory=None, phrases=BuilderPhrases()):
         Manager.__init__(self, library, memory=memory)
+        # Instruction Graph Directory
         self.ig_dir = "generated"
         self.p = phrases
         self.state = States.WAITING
@@ -24,12 +80,13 @@ class InteractiveManager(Manager):
 
     @synchronized_method
     def parse_input_text(self, text):
+        print("While in state %s, received text:\n%s" % (self.state, text))
         response = {
-            States.WAITING: self._waiting_response(text),
-            States.CONFIRM_LEARN_IG: self._confirm_learn_ig_response(text),
-            States.LEARNING_IG_WAITING: self._learning_ig_waiting_response(text),
-            States.CONFIRM_ADD_PRIM_WHEN_LEARNING: self._confirm_add_prim_when_learning_response(text),
-        }[self.state]
+            States.WAITING: self._waiting_response,
+            States.CONFIRM_LEARN_IG: self._confirm_learn_ig_response,
+            States.LEARNING_IG_WAITING: self._learning_ig_waiting_response,
+            States.CONFIRM_ADD_PRIM_WHEN_LEARNING: self._confirm_add_prim_when_learning_response,
+        }[self.state](text)
         return response
 
     # :cmd_regexes: compiled regexes against which to test
@@ -38,7 +95,7 @@ class InteractiveManager(Manager):
     @staticmethod
     def _run_1st_match_fn(text, cmd_regexes, cmd_fns):
         match = idx_1st_match(text, cmd_regexes)
-        return cmd_fns[match[0]](text, match[1])
+        return cmd_fns[match[0]](text, match[1] or None)
 
     # Will either learn a new graph, run a graph, or run a primitive
     def _waiting_response(self, text):
@@ -116,7 +173,7 @@ class InteractiveManager(Manager):
             self.state = States.WAITING
             return self.p.no_learn
 
-        cmd_fns = [pos_resp, neg_resp, lambda(_, __): self.p.unclear_confirm]
+        cmd_fns = [pos_resp, neg_resp, lambda _, __: self.p.unclear_confirm]
         return self._run_1st_match_fn(text, cmd_regexes, cmd_fns)
 
     # Will either add a primitive or be done
@@ -188,8 +245,8 @@ class InteractiveManager(Manager):
         return self._queue_primitive_to_learn(text, prims)
 
     def _queue_primitive_to_learn(self, cmd_text, prims):
-        cmd_regexes = [p.match_regex_or_fn for p in prims]
-        match_id, _ = idx_1st_match(cmd_text, cmd_regexes)
+        cmd_functions = [p.match_regex_or_fn for p in prims]
+        match_id = idx_1st_true_fn(cmd_text, cmd_functions)
         if match_id < len(prims):
             self.primitive_queued = prims[match_id]
             self.primitive_queued_args = self.primitive_queued.argparse_regex_or_fn(cmd_text)
@@ -209,7 +266,7 @@ class InteractiveManager(Manager):
         cmd_fns = [
             self._from_learn_ig_conf_add_prim,
             self._from_learn_ig_conf_do_not_add_prim,
-            lambda (_, __): self.p.unclear_confirm
+            lambda _, __: self.p.unclear_confirm
         ]
         return self._run_1st_match_fn(text, cmd_regexes, cmd_fns)
 
@@ -248,56 +305,4 @@ class States(Enum):
     CONFIRM_ADD_PRIM_WHEN_LEARNING = 3
 
 
-class BuilderPhrases(object):
-    # noinspection PySingleQuotedDocstring
-    '''
-        Contains the regex for matching phrases the human says to the agent, as well as creating
-        the phrases that the agent will say to the human.
-        
-        For human input, the important inputs are
-        :teach_you: - for a human to initiate the construction of a new graph.  Other responses for
-        dialgoue thereafter during the construction are included as well
-        :run_ig: - for a human to initaite loading and running an existing ig
-        Any other response not in the middle of an interaction is construed as an instruction
-            to execute a primitive, and the primitives are checked.
-    '''
-    def __init__(self):
-        # == Human Input ==
-        # For a human to initiate creating an IG
-        self.CMD_GROUP = "cmd"
-        self.NEG_GROUP = "neg"
-        self.teach_you = regex("i will teach you to (.*)")
-        self.confirm_pos = regex("yes")
-        self.confirm_neg = regex("no")
-        self.teaching_done = regex("done (?:learning|teaching)")
-        # self.run_ig = regex("run the graph (.*)")
-        self.h_if_cond = regex("if (?P<neg>not )?(?P<cmd>.*)")
-        self.h_while_cond = regex("(?:while|loop) (?P<neg>not )?(?P<cmd>.*)")
-        self.h_end_if = regex("end if")
-        self.h_end_loop = regex("end loop")
-        self.run_ig = regex("run (.*)")
 
-        # == Agent Responses ==
-        self.agent_start = "Beginning interactive graph runner and builder."
-        self.exec_prim_success = ""
-        self.exec_prim_fail = "Could not find or run prim <prim_id>"
-        self.exec_prim_name_token = "<prim_id>"
-        self.exec_graph_success = ""
-        self.exec_graph_fail = "Could not find or run graph <prim_id>"
-        self.exec_graph_name_token = "<prim_id>"
-        self.build_new_graph = "I will learn to <name>?"
-        self.build_new_graph_filename_token = "<name>"
-        self.yes_learn = "Ok, I am ready to learn.  What is first?"
-        self.no_learn = "Ok"
-        self.unclear_confirm = "I don't understand." \
-                               "Can you confirm 'yes' or 'no' please?"
-        self.unclear_learn = "I don't understand. Please name a primitive to add or tell me I'm done."
-        self.confirm_new_primitive = "I should <name>?"
-        self.confirm_new_primitive_name_token = "<name>"
-        self.new_primitive_confirmed_pos = "Ok, what's next?"
-        self.new_primitive_confirmed_neg = "Ok, what's next?"
-        self.done_building_graph = "I have learned <name>?"
-        self.done_building_graph_filename_token = "<name>"
-
-        self.yes = "Yes"
-        self.no = "No"
