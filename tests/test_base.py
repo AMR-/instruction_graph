@@ -1,15 +1,24 @@
 import os
 import unittest as ut
 from glob import glob
-
+from abc import abstractmethod, ABCMeta
 from instruction_graph.example.DefaultMemory import DefaultMemory
 
 
 class TestBase(ut.TestCase):
     out_folder = "generated/"  # WARNING: Test will delete .ig files from this folder before tests
 
+    __metaclass__ = ABCMeta
+
+    @classmethod
+    @abstractmethod
+    def skip(cls):
+        raise NotImplementedError()
+
     @classmethod
     def setUpClass(cls):
+        if cls.skip():
+            raise ut.SkipTest("DEBUG")
         print("setup is running")
         cls.memory_obj = DefaultMemory()
         cls.igs = {}

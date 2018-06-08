@@ -1,14 +1,16 @@
 import os
-# import unittest as ut
 from test_base import TestBase
 
 from instruction_graph.core.Manager import Manager
 from instruction_graph.example.DefaultMemory import DefaultMemory
-
 from instruction_graph.example.ExamplePrimitiveLibrary import ExamplePrimitiveLibrary
 
 
 class TestRunIG(TestBase):
+
+    @classmethod
+    def skip(cls):
+        return False
 
     memory_obj = None
     igs = {}
@@ -23,7 +25,6 @@ class TestRunIG(TestBase):
     top_parent_two_level_ig = "ig_ri7.ig"
 
     def setUp(self):
-        # raise ut.SkipTest("DEBUG")
         TestRunIG.memory_obj = DefaultMemory()
         library = ExamplePrimitiveLibrary()
         # noinspection PyAttributeOutsideInit

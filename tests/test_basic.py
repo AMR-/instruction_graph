@@ -10,6 +10,10 @@ from instruction_graph.example.ExamplePrimitiveLibrary import ExamplePrimitiveLi
 
 class TestBasic(TestBase):
 
+    @classmethod
+    def skip(cls):
+        return False
+
     memory_obj = None
     igs = {}
 
@@ -19,7 +23,6 @@ class TestBasic(TestBase):
     conditional_ig = "ig3.ig"
 
     def setUp(self):
-        # raise ut.SkipTest("DEBUG")
         TestBasic.memory_obj = DefaultMemory()
         library = ExamplePrimitiveLibrary()
         # noinspection PyAttributeOutsideInit

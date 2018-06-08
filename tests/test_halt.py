@@ -10,6 +10,10 @@ from instruction_graph.example.ExamplePrimitiveLibrary import ExamplePrimitiveLi
 
 class TestHalt(TestBase):
 
+    @classmethod
+    def skip(cls):
+        return False
+
     memory_obj = None
     igs = {}
 

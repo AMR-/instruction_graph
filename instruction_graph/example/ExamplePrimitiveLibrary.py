@@ -31,17 +31,35 @@ class ExamplePrimitiveLibrary(BasePrimitiveLibrary):
                    human_description='Decrement the value found at the specified key by 1.'),
             Action(fn_name='queue_ig', fn=self.queue_ig_prim),
             Action("print_args", self.print_args,
-                   "Print with Args", "Print the first argument interpolated with the second.")
+                   "Print with Args", "Print the first argument interpolated with the second."),
+            Action(fn_name='im_set', fn=self.f_set, human_name='Set Function',
+                   human_description='Sets a value in the memory.',
+                   match_re_or_fn="set [a-z0-9 ]+ to [a-z0-9 ]+", argparse_re_or_fn="set (.*) to (.*)",
+                   parsed_description=lambda args: "Set the value of '%s' to '%s'" % (args[0], args[1])),
+            Action(fn_name='im_inc', fn=self.f_inc, human_name='Increment Key',
+                   human_description='Increment the value found at the specified key by 1.',
+                   match_re_or_fn="inc(rement)? [a-z0-9 ]+", argparse_re_or_fn="inc(?:rement)? ([a-z0-9 ]+)"),
+            Action(fn_name='im_dec', fn=self.f_dec, human_name='Decrement Key',
+                   human_description='Decrement the value found at the specified key by 1.',
+                   match_re_or_fn="dec(rement)? [a-z0-9 ]+", argparse_re_or_fn="dec(?:rement)? ([a-z0-9 ]+)",
+                   parsed_description=lambda args: "Decrement %s by one" % args[0]),
         ]
 
     def list_conditional_primitives(self):
         return [
             Cond(fn_name='less', fn=self.con_less, human_name='is less',
                  human_description="Checks if the value of a certain key is less than a given value.  "
-                                   "(Returns true if so.)"),
+                                   "(Returns true if so.)",
+                 match_re_or_fn="[a-z0-9 ]+ is less than [0-9]+",
+                 argparse_re_or_fn="([a-z0-9 ]+) is less than ([0-9]+)",
+                 parsed_description=lambda args: "The value of '%s' is less than %s" % (args[0], args[1])),
             Cond(fn_name='less_or_no_key', fn=self.con_less_or_no_key, human_name='is less or no key',
                  human_description="Checks if the value of a certain key is less than a given value.  "
-                                   "(Returns true if so, or if the key does not exist.)")
+                                   "(Returns true if so, or if the key does not exist.)",
+                 match_re_or_fn="[a-z0-9 ]+ is less than [0-9]+ if it exists",
+                 argparse_re_or_fn="([a-z0-9 ]+) is less than ([0-9]+) if it exists",
+                 parsed_description=lambda args: "The value of '%s' is less than %d or doesn't exist" %
+                                                 (args[0], args[1])),
         ]
 
     # -- / end implementation of abstract functions --
@@ -112,4 +130,4 @@ class ExamplePrimitiveLibrary(BasePrimitiveLibrary):
     @staticmethod
     def _less(memory, key, maximum):
         value = int(memory.get(key))
-        return value < maximum
+        return value < int(maximum)

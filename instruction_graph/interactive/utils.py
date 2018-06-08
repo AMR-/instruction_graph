@@ -10,7 +10,7 @@ def regex(pattern):
 #   or the value (n+1, None) if there is no match
 def idx_1st_match(text, list_of_regex):
     def rmatch(i, tex):
-        return list_of_regex[i].match(text)
+        return list_of_regex[i].match(tex)
     n = len(list_of_regex)
     return next(((i, rmatch(i, text)) for i in range(n) if rmatch(i, text)), (n, None))
 
