@@ -1,4 +1,5 @@
 from InteractiveManager import InteractiveManager
+from six.moves import input as py23_input
 
 
 # Use text to build, edit, and view info about instruction graphs
@@ -22,7 +23,8 @@ class TextCommunicator(object):
             cmd = self._input()
 
     def _input(self):
-        return raw_input(self._get_prompt()).lower()
+        # noinspection PyCompatibility, Reason-handled_by_six
+        return py23_input(self._get_prompt()).lower()
 
     def _get_prompt(self):
         return ('' if self.im.lrn_graph_name is None else '(' + self.im.lrn_graph_name + ')') \

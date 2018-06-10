@@ -175,6 +175,7 @@ class InteractiveManager(Manager):
 
         def neg_resp(*_):
             self.state = States.WAITING
+            self.lrn_graph_name = None
             return self.p.no_learn
 
         cmd_fns = [pos_resp, neg_resp, lambda _, __: self.p.unclear_confirm]
