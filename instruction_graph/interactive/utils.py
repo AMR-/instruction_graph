@@ -1,15 +1,5 @@
 import threading
-# import sys
 import re
-
-
-# def py_version():
-#     return sys.version_info.major
-
-# if py_version() == 2:
-#     pass # TODO
-# else:
-#     import importlib.util as ilu
 
 
 def regex(pattern):
@@ -44,25 +34,3 @@ def synchronized_method(method):
                 return method(self, *args, **kws)
 
     return sync_method
-
-
-# def load_class_from_file(filepath, modulename, classname, args=None):
-#     if py_version() == 3:  # python 3
-#         spec = ilu.spec_from_file_location(modulename, filepath)
-#         foo = ilu.module_from_spec(spec)
-#         spec.loader.exec_module(foo)
-#         return foo.MyClass(args) if args else foo.MyClass()  # TODO
-#     elif py_version() == 2:
-#         pass
-#         TODO
-    # else:
-    #     return NotImplementedError()
-
-
-# cpath of the form 'instruction_graph.example.ExamplePrimitiveLibrary.ExamplePrimitiveLibrary'
-# def import_class_from_loaded_module(cpath):
-#     components = cpath.split('.')
-#     mod = __import__(components[0])
-#     for comp in components[1:]:
-#         mod = getattr(mod, comp)
-#     return mod
