@@ -35,7 +35,8 @@ class TextCommunicator(object):
             'list primitives': self._list_primitives,
             'lp': self._list_primitives,
         }.get(cmd, self._parse_complex_command)(cmd)
-        print(result)
+        if result:
+            print(result)
 
     # noinspection PyUnusedLocal,Reason-every_chosen-command_gets_passed_cmd
     def _list_primitives(self, cmd):

@@ -28,7 +28,6 @@ class BuilderPhrases(object):
         self.confirm_pos = regex("y(?:es|eah)?")
         self.confirm_neg = regex("no")
         self.teaching_done = regex("done (?:learning|teaching)")
-        # self.run_ig = regex("run the graph (.*)")
         self.h_if_cond = regex("if (?P<neg>(?:not|don'?t) )?(?P<cmd>.*)")
         self.h_while_cond = regex("(?:while|loop) (?P<neg>(?:not|don'?t) )?(?P<cmd>.*)")
         self.h_else = regex("else")
@@ -83,6 +82,12 @@ class InteractiveManager(Manager):
 
     @synchronized_method
     def parse_input_text(self, text):
+        if text and text.strip():
+            return self._parse_valid_input_text(text)
+        else:
+            return None
+
+    def _parse_valid_input_text(self, text):
         print("While in state %s, received text:\n%s" % (self.state, text))
         response = {
             States.WAITING: self._waiting_response,
