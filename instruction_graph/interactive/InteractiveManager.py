@@ -153,15 +153,19 @@ class InteractiveManager(Manager):
             action = actions[match_id]
             args = action.argparse_regex_or_fn(text)
             print("Running action with id %s" % action.fn_name)
-            if action.parameterized_description:
-                print("with description %s" % action.parameterized_description(args))
-            action.function(self.memory_obj, *args)
-            if action.parameterized_description(args):
-                return "Executed %s" % action.parameterized_description(args)
-            else:
-                return self.p.exec_prim_success.replace(
-                    self.p.exec_prim_name_token, action.fn_name
-                )
+            try:
+                if action.parameterized_description:
+                    print("with description %s" % action.parameterized_description(args))
+                action.function(self.memory_obj, *args)
+                if action.parameterized_description(args):
+                    return "Executed %s" % action.parameterized_description(args)
+                else:
+                    return self.p.exec_prim_success.replace(
+                        self.p.exec_prim_name_token, action.fn_name
+                    )
+            except TypeError:
+                print("Matched primitive but encountered an error when running the parsed_description function.")
+                print(traceback.format_exc())
         except Exception:
             print(traceback.format_exc())
             resp = self.p.exec_prim_fail.replace(
