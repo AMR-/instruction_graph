@@ -265,3 +265,5 @@ class TestInteractiveManager(TestBase):
         self.assertEquals(self.memory_obj.get("key 3"), 5)
         self.assertEquals(self.memory_obj.get("key 4"), 2)
         self.assertEquals(self.memory_obj.get("key 5"), 4)
+
+    # TODO add test for instructing running a graph inside a graph

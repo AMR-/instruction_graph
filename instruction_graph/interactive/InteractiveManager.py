@@ -1,9 +1,11 @@
 from ..core.Manager import Manager
 from ..core.IG import InstructionNode as NodeState
+from ..components.PrimitiveTuples import ActionPrimitive as Action
 from .utils import synchronized_method, regex, idx_1st_match, idx_1st_true_fn
 from collections import defaultdict
 from enum import Enum
 import traceback
+import os
 
 
 class BuilderPhrases(object):
@@ -55,6 +57,11 @@ class BuilderPhrases(object):
         self.confirm_new_primitive_cond_token = "<cond>"
         self.new_primitive_confirmed_pos = "Ok, what's next?"
         self.new_primitive_confirmed_neg = "Ok, what's next?"
+        self.new_run_graph_not_exist = "The graph you requesting I add does not seem to exist. " \
+                                       "I checked for it at <location>."
+        self.new_run_graph_not_exist_location_token = "<location>"
+        self.confirm_add_run_graph_name = "run the graph <name>"
+        self.confirm_add_run_graph_name_graph_name_token = "<name>"
         self.done_building_graph = "I have learned <name>."
         self.done_building_graph_filename_token = "<name>"
 
@@ -198,7 +205,8 @@ class InteractiveManager(Manager):
             self.p.h_while_cond,
             self.p.h_else,
             self.p.h_end_if,
-            self.p.h_end_loop
+            self.p.h_end_loop,
+            self.p.run_ig
         ]
         cmd_fns = [
             self._from_learn_ig_wait_done_learn_ig,
@@ -207,6 +215,7 @@ class InteractiveManager(Manager):
             self._from_learn_ig_wait_add_else,
             self._from_learn_ig_wait_add_end_if,
             self._from_learn_ig_wait_add_end_loop,
+            self._from_learn_ig_wait_add_run_ig,
             self._from_learn_ig_wait_add_action,
         ]
         return self._run_1st_match_fn(text, cmd_regexes, cmd_fns)
@@ -253,6 +262,25 @@ class InteractiveManager(Manager):
         self.state = States.CONFIRM_ADD_PRIM_WHEN_LEARNING
         self.primitive_queued_type = NodeState.ENDLOOP
         return self._confirm_new_primitive("end the loop")
+
+    def _from_learn_ig_wait_add_run_ig(self, _, m):
+        graph_name = m.group(1)
+        assumed_filename = self.ig_dir + graph_name.replace(' ', '_') + ".ig"
+        print("Attempting to add run-graph %s" % assumed_filename)
+        if os.path.isfile(assumed_filename):
+            self.primitive_queued = Action(self.library.run_ig_name, None)  # don't need to pass fn due to magic
+            self.primitive_queued_args = [assumed_filename]
+            self.primitive_queued_type = NodeState.ACTION
+            self.state = States.CONFIRM_ADD_PRIM_WHEN_LEARNING
+            return self._confirm_new_primitive(
+                self.p.confirm_add_run_graph_name.replace(
+                    self.p.confirm_add_run_graph_name_graph_name_token, graph_name
+                )
+            )
+        else:
+            return self.p.new_run_graph_not_exist.replace(
+                self.p.new_run_graph_not_exist_location_token, assumed_filename
+            )
 
     def _from_learn_ig_wait_add_action(self, text, _):
         # check if matches any prims, if so try add, if not say so
