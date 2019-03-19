@@ -106,7 +106,7 @@ print(resp)
 
 The IM is initialized with a library and a memory.  It creates a Manager inside itself which it uses to build a graph if necessary.
 
-The **parse_input_text** method takes in text.  The IM agent will peform any actions and return its response as a string.  Actions may involve executing primtives/graphs or building/saving graphs.
+The **parse_input_text** method takes in text.  The IM agent will perform any actions and return its response as a string.  Actions may involve executing primitives/graphs or building/saving graphs.
 
 The IM can exist in four states:
 * WAITING: can be commanded to execute a primitive, execute a graph, or start learning a new graph
@@ -150,7 +150,7 @@ yes_learn | `"Ok, I am ready to learn.  What is first?"` | The IM outputs this a
 no_learn | `"Ok"` | The IM outputs this after receiving a negative response to checking whether it should learn a graph
 unclear_confirm | `"I don't understand. Please name a primitive to add or tell me I'm done."` | The IM outputs this when it cannot process the human response after the IM asks for a yes/no response.
 unclear_learn | `"I don't understand. Please name a primitive to add or tell me I'm done."` | The IM outputs this if it doesn't understand text input during graph construction.
-confirm_new_primtitive | `"I should <cond> <name>"` | During graph construction, the IM asks for confirmation for adding a primitive using this construction. *<name>* will be replaced with the name of the primitive (including parameters), and <cond> will be replaced by any of the following if required: IF, WHILE, NOT
+confirm_new_primitive | `"I should <cond> <name>"` | During graph construction, the IM asks for confirmation for adding a primitive using this construction. *<name>* will be replaced with the name of the primitive (including parameters), and <cond> will be replaced by any of the following if required: IF, WHILE, NOT
 new_primitive_confirmed_pos | `"Ok, what's next?"` | When the human responds confirming adding a node, the IM outputs this.
 new_primitive_confirmed_neg | `"Ok, what's next?"` | When the human responds rejecting confirmation of adding a node, the IM outputs this.
 confirm_add_run_graph_name | `"run the graph <name>"` | The IM uses this construction to confirm adding a *run_ig* node
