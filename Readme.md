@@ -8,6 +8,19 @@ Create an Instruction Graph, and associate it with a Primitive Library and Memor
 
 This paradigm is useful because it allows executing a single task plan across multiple robots/systems.  For a single robot, allows defining atomic functionality once, and re-using it across all the tasks that that robot is to complete.
 
+If you use this library in a project, please cite the following:
+
+    @mastersthesis{Roth-2019-117131,
+    author = {Aaron M. Roth},
+    title = {Structured Representations for Behaviors of Autonomous Robots},
+    year = {2019},
+    month = {July},
+    school = {Carneige Mellon University},
+    address = {Pittsburgh, PA},
+    number = {CMU-RI-TR-19-50},
+    keywords = {Artificial Intelligence, Explainable Artificial Intelligence, Human Robot Interaction, Reinforcement Learning, Decision Trees, Robotics Frameworks, Instruction Graph, Learning by Instruction},
+    }
+
 ### Table of Contents
 1. [Installation](#Installation)
 1. [Introduction](#Introduction)
